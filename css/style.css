@@ -28,6 +28,7 @@ Questions for TA:
 1. In Task 1 (HTML Layout) Main Content should be a <main> tag?
 2. In Task 2 (CSS stylesheet) content that would be 1000px and center is simply just <body>?
 3. Follow-up on 2.: wouldn't max-width be better to improve the browser's handling of small windows (e.g. making a site usable on mobile. )?
+4. CSS: better practice to use main tag or mainContent id?
 */
 
 /* the padding and border of an element no longer increase its width.*/
@@ -37,6 +38,9 @@ Questions for TA:
     box-sizing: border-box;
 }
 
+/* clearFix is used to prevent images overflowing out of div
+ * http://learnlayout.com/clearfix.html
+ */
 .clearFix {
     overflow: auto;
 }
