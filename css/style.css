@@ -22,8 +22,7 @@ CONTENTS:
 =Footer
 ------------------------------------------------------------*/
 
-
-/* the padding and border of an element no longer increase its width.*/
+/* the padding and border of an addToCartButtons no longer increase its width.*/
 * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
