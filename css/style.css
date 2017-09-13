@@ -5,7 +5,7 @@ version: 1.0
 last modified: 11.09.2017 by Aviral Garg
 author: Aviral Garg and Atif Mahmud
 email: avi.ubc@gmail.com and atifmahmud95@gmail.com
-website: TODO: updated when hosting
+website: TODO: update when hosting
 Resources used to follow best practices:
 CSS:
  1. http://learnlayout.com/
@@ -22,14 +22,6 @@ CONTENTS:
 =Footer
 ------------------------------------------------------------*/
 
-/*
-TODO: ask and then remove questions
-Questions for TA:
-1. In Task 1 (HTML Layout) Main Content should be a <main> tag?
-2. In Task 2 (CSS stylesheet) content that would be 1000px and center is simply just <body>?
-3. Follow-up on 2.: wouldn't max-width be better to improve the browser's handling of small windows (e.g. making a site usable on mobile. )?
-4. CSS: better practice to use main tag or mainContent id?
-*/
 
 /* the padding and border of an element no longer increase its width.*/
 * {
@@ -47,14 +39,15 @@ Questions for TA:
 
 body {
     /* max-width instead of width: to improve the browser's handling of small windows */
-    max-width: 1000px;
+    width: 1000px;
 
-    /*TODO: any better way to align content?*/
+    /* centering the text*/
     text-align: center;
 
-    /*following margins to center the content*/
+    /* center the content */
     margin-right: auto;
     margin-left: auto;
+
     background-color: rgba(148, 191, 215, 0.24);
 }
 
@@ -80,12 +73,10 @@ header {
 }
 
 main {
-/ / border: solid green;
     position: relative;
 }
 
 #navigationMenu {
-/ / border: solid red;
     float: left;
     width: 200px;
 }
@@ -127,7 +118,6 @@ button:hover {
 }
 
 #productList img {
-/ / border: solid red;
     width: 200px;
     height: 200px;
     border-radius: 12px;
@@ -141,7 +131,6 @@ button:hover {
 .overlay2 {
     z-index: -1;
     position: absolute;
-/ / border: solid green;
     top: -30px;
     bottom: 0;
     left: -30px;
@@ -156,7 +145,6 @@ button:hover {
 
 .overlay {
     position: absolute;
-/ / border: solid green;
     top: 124px;
     bottom: 0;
     left: -20px;
