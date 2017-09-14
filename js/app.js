@@ -20,6 +20,7 @@
  *      - tabs/spaces
  *      - format files that automatically changes the code style
  *      - mutable variable is accessible from closure
+ *      - overflow when changing the width of screen
  *
  * TODO (IMPORTANT):
  * 1. look for changes in assignment by professor (code so far is based on Dr. Karthik's assignment)
@@ -46,8 +47,9 @@ function startTimer() {
         startTimer();
     } else {
         setTimeout(function () {
-            console.log(++inactiveTime);
-            startTimer()
+            var inactiveTimeDisplay = document.getElementById("inactiveTimeDisplay");
+            inactiveTimeDisplay.innerHTML = ++inactiveTime + " seconds";
+            startTimer();
         }, 1000);
     }
 }
@@ -62,7 +64,7 @@ initializeEventListeners();
 function initializeVariables() {
 
     /* TODO: HTML injection */
-    var htmlCode = "<a> testing </a>";
+    var htmlCode = "<a href='http://www.google.com'> testing </a>";
     document.getElementById("container").innerHTML = htmlCode;
 
     /* Information for all the products in the store */
@@ -102,20 +104,29 @@ function initializeEventListeners() {
     // TODO-continued: do something like https://stackoverflow.com/questions/22754315/for-loop-for-htmlcollection-elements
     // TODO: Q: Should they not be combined in one loop
     for (var i = 0; i < addToCartButtons.length; i++) {
-        var addButton = addToCartButtons[i];
-        var removeButton = removeFromCartButtons[i];
+        // TODO: why this closure problem got fixed???
+        (function () {
+            var addButton = addToCartButtons[i];
+            addButton.addEventListener("click", function () {
+                addButton.parentNode.childNodes[3].style.display = 'inline-block';
+                // add-button's parent must have an id with the name of the product
+                var itemName = addButton.parentNode.id;
+                addToCart(itemName);
+            });
+        })();
 
-        addButton.addEventListener("click", function () {
-            // add-button's parent must have an id with the name of the product
-            var itemName = addButton.parentNode.id;
-            addToCart(itemName);
-        });
+    }
 
-        removeButton.addEventListener("click", function () {
-            // remove-button's parent must have an id with the name of the product
-            var itemName = removeButton.parentNode.id;
-            removeFromCart(itemName);
-        });
+    for (i = 0; i < addToCartButtons.length; i++) {
+        (function () {
+            var removeButton = removeFromCartButtons[i];
+            removeButton.addEventListener("click", function () {
+                // remove-button's parent must have an id with the name of the product
+                var itemName = removeButton.parentNode.id;
+                removeFromCart(itemName);
+            });
+        })();
+
     }
 }
 
@@ -139,6 +150,10 @@ function removeFromCart(productName) {
         console.log("Removing 1 " + productName);
         cart[productName]--;
         products[productName]++;
+        if (cart[productName] == 0) {
+            // no more product left; hide remove button
+            document.getElementById(productName).childNodes[3].style.display = 'none';
+        }
     } else {
         // TODO: create a modal instead
         alert("No more " + productName + " in the cart");
