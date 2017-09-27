@@ -22,6 +22,7 @@ body{
  	background: #f0f7fb;
  	margin-right: auto;
     margin-left: auto;
+    border: 1px solid red;
 }
 
 header{
@@ -61,11 +62,21 @@ header{
 	flex-direction: column;
 	flex-wrap: wrap;
 	font-size: 18pt;
+	border: 1px dotted blue;
+	margin-left: 0px;
 }
 
 #navigationMenu ul button{
 	background-color: #f0ece2;
 	max-width: 200px;
-	padding: 15pt 20pt;
+	margin-left: 0px;
+	margin-top: 4px;
+	padding: 15px 20px;
 	align-content: left;
+	border-radius: 15px;
+}
+
+#navigationMenu ul button:hover{
+	color: #000000;
+	background-color: #ffffff;
 }
