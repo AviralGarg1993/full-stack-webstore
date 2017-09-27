@@ -1,0 +1,56 @@
+/*
+ * Best practices and layout guidelines adapted from: 
+ *  
+ *  Aviral Garg
+ *  learnlayout.com
+ *  Kumseok Jung
+ *
+ */
+
+
+/* This is to ensure that increasing width does not affect the padding */
+*{
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+}
+
+
+
+body{
+	max-width: 1000px;	
+ 	background: #f0f7fb;
+ 	margin-right: auto;
+    margin-left: auto;
+}
+
+header{
+	
+}
+
+#logo{
+	height : 200px;
+	width  : 130px ;
+}
+
+#welcomeBanner{
+	height: 220px;
+	width:  780px;
+}
+
+#topImages{
+	display: inline-block;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#footer{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #efefef;
+  text-align: center;
+
+}
+

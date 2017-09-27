@@ -1,0 +1,21 @@
+<!DOCTYPE html> 
+<html lang = "en-US"> 
+
+	<head>
+		<title>Home - UBC Bookstore</title>
+		<!--add metadata-->
+		<link rel="stylesheet", href="style.css", type="text/css">
+	</head>
+
+	<h1>
+		<img id="logo", src="logo.jpg", alt="Image cannot be displayed at this time">
+		<text id="Heading"> UBC Bookstore </text>
+	</h1>	
+
+
+	<body>
+		<text>Atif</text>
+	</body>
+
+</html>
+
