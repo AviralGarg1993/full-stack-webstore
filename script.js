@@ -14,7 +14,7 @@
  // Function to create the list from the array
  function makeUL(array){
 
- 	var list = document.create('ul');
+ 	var list = document.createElement('ul');
 
  	for(var i =0; i < array.length(); i++){
 
@@ -22,14 +22,14 @@
  		var item = document.createElement('li');
  		
     	// This sets the contents
- 		item.appendChild(document.createTextNode(array[i]));
+ 		item.innerHTML(array[i]);
  		
  		// This adds it to the list
  		list.appendChild(item);
 
+ 		return list;
+
  	}
 
- 	return list;
-
+ 	document.getElementById('navigationMenu').appendChild(makeUL(navArray));
  }
- document.getElementById("navigationMenu").appendChild(makeUL(navArray));
