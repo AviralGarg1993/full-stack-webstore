@@ -54,3 +54,18 @@ header{
 
 }
 
+#navigationMenu ul{
+	list-style-type: none;
+	font-family : Arial;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	font-size: 18pt;
+}
+
+#navigationMenu ul button{
+	background-color: #f0ece2;
+	max-width: 200px;
+	padding: 15pt 20pt;
+	align-content: left;
+}

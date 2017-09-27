@@ -1,0 +1,24 @@
+<html>
+<body>
+
+<div id="myDiv"></div>
+<button onclick="makeList()">Make my List</button>
+
+<script>
+function makeList(){
+
+		var myUl = document.createElement('ul');
+	var myFruits = ["apple", "grape", "banana"];
+	var i = 0;
+	for(i=0;i<3;i++)
+    {
+    	var myLi = document.createElement('li');
+    	myLi.innerHTML= myFruits[i];
+    	myUl.appendChild(myLi);
+    }
+
+    document.getElementById("myDiv").appendChild(myUl);
+}
+</script>
+</body>
+</html>
