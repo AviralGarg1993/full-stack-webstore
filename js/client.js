@@ -1,8 +1,11 @@
 console.log('IMPORTANT: Please run the command "npm install" and ' +
-'then "heroku local web" in the source directory');
+    'then "heroku local web" in the source directory');
 httpGetAsync('/navMenuList', navMenuController);
 httpGetAsync('/productList', productListController);
+
+//TODO: move to controller
 document.getElementById('showCartButton').onclick = showCart;
+window.onload = startTimer;
 
 /*
  * MVC design pattern
@@ -18,19 +21,39 @@ var navMenu;
 var products = [];
 var productInfo = [];
 var cart = [];
-
+var inactiveTime = 0;
+const imgDIR = '/images/products/';
 const INITIAL_QUANTITY = 5;
 
-function addProductInfo(name, quantity, cost){
-	productInfo[name] = {
-		quantity: quantity,
-		cost: cost
-	};
+
+function resetTimer() {
+    inactiveTime = 0;
 }
 
-// only for assignment-2
-function addProduct(name, quantity){
-	products[name] = quantity;
+function startTimer() {
+    if (inactiveTime >= 30) {
+        alert("Hey there! Are you still planning to buy something?");
+        resetTimer();
+        startTimer();
+    } else {
+        setTimeout(function () {
+            var inactiveTimeDisplay = document.getElementById("inactiveTimeDisplay");
+            inactiveTimeDisplay.innerHTML = ++inactiveTime + " seconds";
+            startTimer();
+        }, 1000);
+    }
+}
+
+
+function addProductInfo(name, quantity, cost) {
+    productInfo[name] = {
+        quantity: quantity,
+        cost: cost
+    };
+}
+
+function addProduct(name, quantity) {
+    products[name] = quantity;
 }
 
 function stringToArray(str) {
@@ -43,71 +66,73 @@ function setNavMenu(navMenuList) {
 }
 
 // this initializes cart as well
-function initializeProductList(productList){
-	var temp = stringToArray(productList);
-	temp[0].forEach(function(product){
-		var pName = product.split('_')[0];
-		var pQuantity = INITIAL_QUANTITY;
-		var pCost = product.split('_')[1];
-		addProductInfo(pName, pQuantity, pCost);
+function initializeProductList(productList) {
+    var temp = stringToArray(productList);
+    temp[0].forEach(function (product) {
+        var pName = product.split('_')[0];
+        var pQuantity = INITIAL_QUANTITY;
+        var pCost = product.split('_')[1];
+        addProductInfo(pName, pQuantity, pCost);
 
-		// only for assignment-2
-		addProduct(pName, pQuantity);
-	});
+        // only for assignment-2
+        addProduct(pName, pQuantity);
+    });
 
-	return products;
+    return products;
 }
 
-function getProdCost(product){
-	return productInfo[product]['cost'];
+function getProdCost(product) {
+    return productInfo[product]['cost'];
 }
 
-function productInCart(pName){
-	return !(cart[pName] === undefined);
+function productInCart(pName) {
+    return !(cart[pName] === undefined);
 }
 
 /*
  * CONTROLLER
  */
-function addToCart(productName){
-	if(productInfo[productName]['quantity'] <= 0 ) {
-		// out of stock
-	} else {
-		if(!productInCart(productName)){
-			//TODO: move this to model
-			cart[productName] = 0;
-		}
-		--productInfo[productName]['quantity'];
-		--products[productName];
-		++cart[productName];
-	}
+function addToCart(productName) {
+    resetTimer();
+    if (productInfo[productName]['quantity'] <= 0) {
+        // out of stock
+    } else {
+        if (!productInCart(productName)) {
+            //TODO: move this to model
+            cart[productName] = 0;
+        }
+        --productInfo[productName]['quantity'];
+        --products[productName];
+        ++cart[productName];
+    }
 }
 
-function removeFromCart(productName){
-	if (!productInCart(productName)) {
-		// already 0!
-		alert(productName + ' does not exist in the cart!');
-	} else {
-		++productInfo[productName]['quantity'];
-		++products[productName];
-		if(--cart[productName] === 0){
-			//TODO: move this to model
-			delete cart[productName];
-		}
-	}
+function removeFromCart(productName) {
+    resetTimer();
+    if (!productInCart(productName)) {
+        // already 0!
+        alert(productName + ' does not exist in the cart!');
+    } else {
+        ++productInfo[productName]['quantity'];
+        ++products[productName];
+        if (--cart[productName] === 0) {
+            //TODO: move this to model
+            delete cart[productName];
+        }
+    }
 }
 
-function showCart(){
-	var alertMsg = '';
-	var cartLength = Object.keys(cart).length;
-	if(cartLength > 0){
-		for(var product in cart){
-			alertMsg += product + ' : ' + cart[product] + '\n';
-		}
-	} else {
-		alertMsg = "Nothing in cart!";
-	}
-	alert(alertMsg);
+function showCart() {
+    var alertMsg = '';
+    var cartLength = Object.keys(cart).length;
+    if (cartLength > 0) {
+        for (var product in cart) {
+            alertMsg += product + ' : ' + cart[product] + '\n';
+        }
+    } else {
+        alertMsg = "Nothing in cart!";
+    }
+    alert(alertMsg);
 }
 
 function httpGetAsync(theUrl, callback) {
@@ -126,12 +151,8 @@ function navMenuController(navMenuList) {
 }
 
 function productListController(productList) {
-	initializeProductList(productList);
-	renderProductList();
-}
-
-function getProductCost(product) {
-	return getProdCost(product);
+    initializeProductList(productList);
+    renderProductList();
 }
 
 /*
@@ -140,76 +161,82 @@ function getProductCost(product) {
 function renderNavMenu() {
     navMenu[0].forEach(function (menuItem) {
         var menu = document.getElementById('navigationMenu');
-
         var navButton = document.createElement('li');
         navButton.className = 'navMenuButton';
         navButton.id = menuItem;
         navButton.innerHTML = menuItem;
-
         menu.appendChild(navButton);
     });
 }
 
+
+function createNewNode(tagName, attrArray) {
+    var newNode = document.createElement(tagName);
+    var keys = Object.keys(attrArray);
+
+    for (var i = 0; i < keys.length; i++) {
+        switch (keys[i]) {
+            case 'class':newNode.className = attrArray[keys[i]];break;
+            case 'id':newNode.id = attrArray[keys[i]];break;
+            case 'src':newNode.src = attrArray[keys[i]];break;
+            case 'innerHTML':newNode.innerHTML = attrArray[keys[i]];break;
+            default:console.log('weird: ' + keys[i]);
+        }
+    }
+
+    return newNode;
+}
+
+/*
+ * Structure for a product div:
+ *
+ *   product div
+ *       - image
+ *       - name
+ *       - overlay2
+ *           - cost
+ *           - border shadow
+ *       - overlay
+ *           - cart image
+ *           - add button
+ *           - remove button
+ */
+
 function renderProductList() {
-	for(var product in products) {
-		var productDiv = document.createElement('div');
-		productDiv.className = ' col-3 col-m-3 productDiv';
-		productDiv.id = product;
 
-		var img = document.createElement('img');
-		img.className = 'productImg';
-		img.src = '/images/products/' + product + '_' +
-			productInfo[product]['cost'] + '.png';
-		img.innerHTML = 'abc'
-		productDiv.appendChild(img);
+    for (var product in products) {
+        var pDiv        = createNewNode('div',{'class':'col-3 col-m-3 productDiv', 'id':product});
+        var pImage      = createNewNode('img',{'class':'productImg','src':imgDIR+product+'_' + productInfo[product]['cost']+'.png'});
+        var pName       = createNewNode('div',{'class':'col-12 col-m-12 productNameDiv','innerHTML':product});
+        var overlayDiv2 = createNewNode('div',{'class':'overlay2'});
+        var pCost       = createNewNode('div',{'class':'col-12 col-m-12 productCostDiv','innerHTML': productInfo[product]['cost']});
+        var overlayDiv  = createNewNode('div',{'class':'overlay'});
+        var cartImg     = createNewNode('img',{'class':'cartImg','src':'images/cart.png'});
+        var addButton   = createNewNode('button',{'class':'col-5 col-m-5 addToCartButton','innerHTML':'Add'});
 
-		var productNameDiv = document.createElement('div');
-		productNameDiv.className = 'col-12 col-m-12 productNameDiv';
-		productNameDiv.innerHTML = product;
-		productDiv.appendChild(productNameDiv);
+        addButton.onclick = function () {
+            // TODO: move this to controller
+            var productName = this.parentElement.parentElement.id;
+            addToCart(productName);
+        };
 
+        var removeButton = createNewNode('button',{'class': 'col-5 col-m-5 removeFromCartButton','innerHTML': 'Remove'});
+        removeButton.onclick = function () {
+            // TODO: move this to controller
+            var productName = this.parentElement.parentElement.id;
+            removeFromCart(productName);
+        };
 
-		var overlayDiv2 = document.createElement('div');
-		overlayDiv2.className = 'overlay2';
+        pDiv.appendChild(pImage);
+        pDiv.appendChild(pName);
+        overlayDiv2.appendChild(pCost);
+        pDiv.appendChild(overlayDiv2);
+        overlayDiv.appendChild(cartImg);
+        overlayDiv.appendChild(addButton);
+        overlayDiv.appendChild(removeButton);
+        pDiv.appendChild(overlayDiv);
 
-		var productCostDiv = document.createElement('div');
-		productCostDiv.className = 'col-12 col-m-12 productCostDiv';
-		productCostDiv.innerHTML = getProductCost(product);
-		overlayDiv2.appendChild(productCostDiv);
-		productDiv.appendChild(overlayDiv2);
-
-		var overlayDiv = document.createElement('div');
-		overlayDiv.className = 'overlay';
-
-		var cartImg = document.createElement('img');
-		cartImg.className = 'cartImg';
-		cartImg.src='images/cart.png';
-		overlayDiv.appendChild(cartImg);
-
-		var addButton = document.createElement('button');
-		addButton.className = 'col-5 col-m-5 addToCartButton';
-		addButton.innerHTML = 'Add';
-		addButton.onclick = function () {
-			// TODO: move this to controller
-			var productName = this.parentElement.parentElement.id;
-			addToCart(productName);
-		}
-		overlayDiv.appendChild(addButton);
-
-		var removeButton = document.createElement('button');
-		removeButton.className = 'col-5 col-m-5 removeFromCartButton';
-		removeButton.innerHTML = 'Remove';
-		removeButton.onclick = function () {
-			// TODO: move this to controller
-			var productName = this.parentElement.parentElement.id;
-			removeFromCart(productName);
-		}
-		overlayDiv.appendChild(removeButton);
-		productDiv.appendChild(overlayDiv);
-
-
-		var productDisplayArea = document.getElementById('productList');
-
-		productDisplayArea.appendChild(productDiv);
-	};
+        var productDisplayArea = document.getElementById('productList');
+        productDisplayArea.appendChild(pDiv);
+    }
 }

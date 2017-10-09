@@ -1,5 +1,10 @@
 # Assignment2
 
+## IMPORTANT: run 'npm install' and 'heroku local web' in main dir to deploy
+
+
+
+
 This is a continuation of [Assignment 1](https://github.com/juliengs/cpen400a-fall2017-assignment1). If you have successfully completed Assignment 1, you can continue working with your own code. **To help you, we will also release the solution for Assignment 1 (once the marking for assignment 1 is complete)**. You are free to use the solution provided for Assignment 1 or with your own code. Because this is the first assignment, we are providing the solution - solutions for future assignments may not be provided and you'll have to use your own code.
 
 As part of this assignment you will be implementing the "add to cart" functionality in the shopping cart web application.
