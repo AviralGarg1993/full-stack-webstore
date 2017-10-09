@@ -45,14 +45,11 @@ header{
 	margin-left: auto;
 }
 
-#footer{
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: #efefef;
-  text-align: center;
 
+#navigationMenu{
+	display: inline-block;
+	float: left;
+	overflow: hidden;
 }
 
 #navigationMenu ul{
@@ -79,4 +76,72 @@ header{
 #navigationMenu ul button:hover{
 	color: #000000;
 	background-color: #ffffff;
+}
+
+#productList{
+	display: block;
+	float: right;
+	list-style-type: none;
+	width: 800px;
+	height: 800px;
+	overflow: hidden;   /* so we dont see overflow */
+}
+
+.product div{
+	border: 1px solid rgba(0,0,0,0.1);
+	border-radius: 7px;
+	padding: 5px;
+	cursor: pointer;
+}
+
+#productList ul{
+	float: left;
+	overflow: hidden;
+	list-style: none;
+}
+#productList li{
+	float: left;
+	overflow: hidden;
+	list-style: none;
+}
+
+.product>div>div{
+	text-align: center;
+	position: relative;
+}
+
+.product>div>div>span{
+	top: 120px;
+	width: 100%;
+	align-self: center;
+	visibility: hidden;
+	position: absolute;
+	display: block;
+	z-index: +1;
+	background: #BFCAD8;
+}
+
+.product:hover div{
+	background: #E6E8EC;
+}
+
+.product:hover div>div>span{
+	visibility: visible;
+}
+
+#productList li img{
+	width: 150px;
+	height: 150px;
+	border-radius: 7px;
+}
+
+#footer{
+  display: inline-block;  /* This line did the trick */
+  width: 1000px;
+  height: 15px;
+  margin-right: auto;
+  margin-left: auto; 
+  background-color: #efefef;
+  text-align: center;
+
 }

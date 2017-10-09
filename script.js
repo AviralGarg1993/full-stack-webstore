@@ -8,7 +8,7 @@
  */
 
  // Array holding the menu items 
- var navArray = ["All Items", "Books", "Clothing", "Tech", "Gifts", "Stationary", "Supplies"];
+ var navArray = ["All Items", "Books", "Clothing", "Tech", "Gifts", "Stationary", "Supplies", "Foobar"];
 
  // Function to create the list from the array
  function makeUL(){
@@ -25,10 +25,11 @@
  	document.getElementById("navigationMenu").appendChild(list);
  }
 
- var products = [];
+ var products = [" "];
 
 
  //Can I use a table if it is scaleable from this point of view? Like easily manageable?
- function makeTable(){
+ //function makeTable(){
 
- }
+  
+//}
