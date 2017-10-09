@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UBC Bookstore</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
-<script src="http://ece.ubc.ca/~kbajaj/cpen400a/jquery.js" type="text/javascript"></script>
+<!--<script src="http://ece.ubc.ca/~kbajaj/cpen400a/jquery.js" type="text/javascript"></script>
 <script src="http://ece.ubc.ca/~kumseok/src/cpen400a/test2.js" type="text/javascript"></script>
-	
+	-->
 </head>
 <body>
 <header>
@@ -17,9 +17,7 @@
 </header>
 <main>
     <div class="col-12 col-m-12 titleArea clearFix">
-		<button class="col-1" id="showCartButton" >
-			<img class = 'col-12' src="images/showCartButton.png"/>
-		</button>
+		<div class="btn" id="showCartButton"> Cart ($0)</div>
     </div>
     <div class="row">
 		<div class="clearFix" id="mainContent">
@@ -38,6 +36,17 @@
     <span id="inactiveTimeDisplay"></span>
     <p>Created by Aviral Garg and Atif Mahmud.</p>
 </footer>
+
+<!-- The Modal -->
+<div id="cartModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p id="modalText">Some text in the Modal..</p>
+    </div>
+
+</div>
 </body>
 <script type='text/javascript' src='js/client.js'></script>
 </html>

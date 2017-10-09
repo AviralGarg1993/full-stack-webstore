@@ -19,12 +19,11 @@ window.onload = startTimer;
  */
 var navMenu;
 var products = [];
-var productInfo = [];
 var cart = [];
 var inactiveTime = 0;
 const imgDIR = '/images/products/';
 const INITIAL_QUANTITY = 5;
-
+var totalCost = 0;
 
 function resetTimer() {
     inactiveTime = 0;
@@ -32,7 +31,7 @@ function resetTimer() {
 
 function startTimer() {
     if (inactiveTime >= 30) {
-        alert("Hey there! Are you still planning to buy something?");
+        //alert("Hey there! Are you still planning to buy something?");
         resetTimer();
         startTimer();
     } else {
@@ -44,97 +43,218 @@ function startTimer() {
     }
 }
 
-
-function addProductInfo(name, quantity, cost) {
-    productInfo[name] = {
+/**
+ * @param name
+ * @param quantity
+ * @param cost
+ */
+function addProduct(name, quantity, cost) {
+    products[name] = {
         quantity: quantity,
         cost: cost
     };
 }
 
-function addProduct(name, quantity) {
-    products[name] = quantity;
-}
-
+/**
+ *
+ * @param str
+ */
 function stringToArray(str) {
     return JSON.parse("[" + str + "]");
 }
 
+/**
+ *
+ * @param navMenuList
+ * @returns {*}
+ */
 function setNavMenu(navMenuList) {
     navMenu = stringToArray(navMenuList);
     return navMenu;
 }
 
-// this initializes cart as well
+/**
+ * @param productList
+ * @return {Array}
+ */
 function initializeProductList(productList) {
     var temp = stringToArray(productList);
     temp[0].forEach(function (product) {
         var pName = product.split('_')[0];
         var pQuantity = INITIAL_QUANTITY;
         var pCost = product.split('_')[1];
-        addProductInfo(pName, pQuantity, pCost);
-
-        // only for assignment-2
-        addProduct(pName, pQuantity);
+        addProduct(pName, pQuantity, pCost);
     });
 
     return products;
 }
 
-function getProdCost(product) {
-    return productInfo[product]['cost'];
-}
-
+/**
+ * @param pName
+ * @return {boolean}
+ */
 function productInCart(pName) {
     return !(cart[pName] === undefined);
 }
 
+
+function updateCartCost() {
+    var keys = Object.keys(cart);
+    totalCost=0;
+    for (var i = 0; i < keys.length; i++) {
+        var pName = keys[i];
+        var pQuantity = cart[pName];
+        var pPrice = products[pName].cost.substr(1);
+
+        console.log('name: ' + pName + 'pQuant: ' + pQuantity + 'pPrice: ' + pPrice);
+        totalCost += pPrice*pQuantity;
+    }
+
+    renderCartCost();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
  * CONTROLLER
  */
+
+
+/**
+ * @param productName
+ */
 function addToCart(productName) {
     resetTimer();
-    if (productInfo[productName]['quantity'] <= 0) {
+    showRemoveButton(productName);
+    if (products[productName]['quantity'] <= 0) {
         // out of stock
+        alert( productName + ' Out of Stock!');
     } else {
         if (!productInCart(productName)) {
             //TODO: move this to model
             cart[productName] = 0;
         }
-        --productInfo[productName]['quantity'];
-        --products[productName];
+        --products[productName]['quantity'];
         ++cart[productName];
     }
+    updateCartCost();
 }
 
+/**
+ * @param productName
+ */
 function removeFromCart(productName) {
     resetTimer();
     if (!productInCart(productName)) {
         // already 0!
         alert(productName + ' does not exist in the cart!');
     } else {
-        ++productInfo[productName]['quantity'];
-        ++products[productName];
+        ++products[productName]['quantity'];
         if (--cart[productName] === 0) {
+            hideRemoveButton(productName);
             //TODO: move this to model
             delete cart[productName];
         }
     }
+    updateCartCost();
 }
 
 function showCart() {
-    var alertMsg = '';
+    updateCartCost();
+    var modalContent = '<table style="width:100%">'+
+    '<tr>\n' +
+        '<th>Product</th>\n' +
+        '<th>Quantity</th> \n' +
+        '<th>Unit Price</th>\n' +
+        '<th>Amount</th>\n' +
+    '</tr>';
     var cartLength = Object.keys(cart).length;
+
     if (cartLength > 0) {
+        var totalAmount=0;
         for (var product in cart) {
-            alertMsg += product + ' : ' + cart[product] + '\n';
+            var quantity = cart[product];
+            var unitPrice = products[product].cost.substr(1);
+            var amount = unitPrice*cart[product];
+            totalAmount +=amount;
+            modalContent += '<tr> <td>' +product + '</td>' + '<td><span id =' + product + ' class="rmBtn">-</span>' + quantity + '<span id =' + product + ' class="addBtn">+</span></td>' + '<td>$' + unitPrice + '</td>' +'<td>$' + amount + '</td>' + '</tr>';
         }
+
+        modalContent += '<br>';
+        modalContent += '<tr> <td>' +'</td>' + '<td>' + '</td>' + '<td>' + '<em>Total Amount: </em></td>' +'<td>$' + totalAmount + '</td>' + '</tr>';
+        modalContent += '</table> <button class="modalCheckOut">Checkout</button>';
+
     } else {
-        alertMsg = "Nothing in cart!";
+        modalContent = "Nothing in cart!";
     }
-    alert(alertMsg);
+    var modalText = document.getElementById('modalText');
+    modalText.innerHTML =modalContent;
+    var modal = document.getElementById('cartModal');
+    modal.style.display = "block";
+    var span = document.getElementsByClassName("close")[0];
+    span.onclick = function() {
+        modal.style.display = "none";
+    };
+
+    var modalCheckOut = document.getElementsByClassName('modalCheckOut')[0];
+    modalCheckOut.onclick = function() {
+        modal.style.display = "none";
+    };
+
+
+
+    //TODO: take the following two functions out of this function
+
+    var modalAddButtons = document.getElementsByClassName("addBtn");
+    console.log(modalAddButtons);
+    for(var i=0; i<modalAddButtons.length;i++) {
+        modalAddButtons[i].onclick = function () {
+            addToCart(this.id);
+            showCart();
+        };
+    }
+
+    var modalRemoveButtons = document.getElementsByClassName("rmBtn");
+    console.log(modalRemoveButtons);
+    for(var i=0; i<modalRemoveButtons.length;i++) {
+        modalRemoveButtons[i].onclick = function () {
+            removeFromCart(this.id);
+            showCart();
+        };
+    }
+
+    document.onkeydown = function(evt) {
+        evt = evt || window.event;
+        if (evt.keyCode == 27) {
+
+            modal.style.display = "none";
+        }
+    };
+
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
 }
 
+/**
+ * @param theUrl
+ * @param callback
+ */
 function httpGetAsync(theUrl, callback) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function () {
@@ -145,19 +265,83 @@ function httpGetAsync(theUrl, callback) {
     xmlHttp.send(null);
 }
 
+/**
+ * @param navMenuList
+ */
 function navMenuController(navMenuList) {
     setNavMenu(navMenuList);
     renderNavMenu();
 }
 
+/**
+ * @param productList
+ */
 function productListController(productList) {
     initializeProductList(productList);
     renderProductList();
 }
 
+
+
+/**
+ * @param addButton
+ */
+function attachAddButtonListener(addButton) {
+    addButton.onclick = function () {
+        // TODO: move this to controller
+        var productName = this.parentElement.parentElement.id;
+        addToCart(productName);
+    };
+}
+
+
+/**
+ * @param removeButton
+ */
+function attachRemoveButtonListener(removeButton) {
+    removeButton.onclick = function () {
+        // TODO: move this to controller
+        var productName = this.parentElement.parentElement.id;
+        removeFromCart(productName);
+    };
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
  * VIEW
  */
+
+
+function hideRemoveButton(productName) {
+    console.log('here');
+    document.getElementById(productName+'rBtn').style.visibility = "hidden";
+}
+
+function showRemoveButton(productName) {
+    console.log('here');
+    document.getElementById(productName+'rBtn').style.visibility = "visible";
+}
+
+function renderCartCost() {
+    document.getElementById('showCartButton').textContent = 'Cart ($' + totalCost + ')';
+}
+
 function renderNavMenu() {
     navMenu[0].forEach(function (menuItem) {
         var menu = document.getElementById('navigationMenu');
@@ -170,14 +354,19 @@ function renderNavMenu() {
 }
 
 
-function createNewNode(tagName, attrArray) {
+/**
+ * @param tagName
+ * @param attrArray
+ * @return {Element}
+ */
+function createNewElement(tagName, attrArray) {
     var newNode = document.createElement(tagName);
     var keys = Object.keys(attrArray);
 
     for (var i = 0; i < keys.length; i++) {
         switch (keys[i]) {
             case 'class':newNode.className = attrArray[keys[i]];break;
-            case 'id':newNode.id = attrArray[keys[i]];break;
+            case 'id':newNode.id = attrArray[   keys[i]];break;
             case 'src':newNode.src = attrArray[keys[i]];break;
             case 'innerHTML':newNode.innerHTML = attrArray[keys[i]];break;
             default:console.log('weird: ' + keys[i]);
@@ -187,7 +376,7 @@ function createNewNode(tagName, attrArray) {
     return newNode;
 }
 
-/*
+/**
  * Structure for a product div:
  *
  *   product div
@@ -202,30 +391,23 @@ function createNewNode(tagName, attrArray) {
  *           - remove button
  */
 
+
 function renderProductList() {
 
     for (var product in products) {
-        var pDiv        = createNewNode('div',{'class':'col-3 col-m-3 productDiv', 'id':product});
-        var pImage      = createNewNode('img',{'class':'productImg','src':imgDIR+product+'_' + productInfo[product]['cost']+'.png'});
-        var pName       = createNewNode('div',{'class':'col-12 col-m-12 productNameDiv','innerHTML':product});
-        var overlayDiv2 = createNewNode('div',{'class':'overlay2'});
-        var pCost       = createNewNode('div',{'class':'col-12 col-m-12 productCostDiv','innerHTML': productInfo[product]['cost']});
-        var overlayDiv  = createNewNode('div',{'class':'overlay'});
-        var cartImg     = createNewNode('img',{'class':'cartImg','src':'images/cart.png'});
-        var addButton   = createNewNode('button',{'class':'col-5 col-m-5 addToCartButton','innerHTML':'Add'});
+        console.log(product);
+        var pDiv        = createNewElement('div', {'class': 'col-3 col-m-3 productDiv', 'id': product});
+        var pImage      = createNewElement('img', {'class': 'productImg','src': imgDIR + product + '_' + products[product]['cost'] + '.png'});
+        var pName       = createNewElement('div', {'class': 'col-12 col-m-12 productNameDiv', 'innerHTML': product});
+        var overlayDiv2 = createNewElement('div', {'class': 'overlay2'});
+        var pCost       = createNewElement('div', {'class': 'col-12 col-m-12 productCostDiv','innerHTML': products[product]['cost']});
+        var overlayDiv  = createNewElement('div', {'class': 'overlay'});
+        var cartImg     = createNewElement('img', {'class': 'cartImg', 'src': 'images/cart.png'});
+        var addButton   = createNewElement('button', {'class': 'col-5 col-m-5 addToCartButton', 'innerHTML': 'Add'});
+        var removeButton = createNewElement('button', {'class': 'col-5 col-m-5 removeFromCartButton','id':product+'rBtn','innerHTML': 'Remove'});
 
-        addButton.onclick = function () {
-            // TODO: move this to controller
-            var productName = this.parentElement.parentElement.id;
-            addToCart(productName);
-        };
-
-        var removeButton = createNewNode('button',{'class': 'col-5 col-m-5 removeFromCartButton','innerHTML': 'Remove'});
-        removeButton.onclick = function () {
-            // TODO: move this to controller
-            var productName = this.parentElement.parentElement.id;
-            removeFromCart(productName);
-        };
+        attachAddButtonListener(addButton);
+        attachRemoveButtonListener(removeButton);
 
         pDiv.appendChild(pImage);
         pDiv.appendChild(pName);

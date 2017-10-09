@@ -145,11 +145,12 @@ header > img {
 	opacity: 0.9;
 	color: white;
 	position: absolute;
-	border-radius 15px;
+	border-radius: 15px;
 	top: 43%;
 	left: 8%;
 	width: 34%;
 	height: 20%;
+    cursor: pointer;
 
 }
 
@@ -159,11 +160,13 @@ header > img {
 	opacity: 0.9;
 	color: white;
 	position: absolute;
-	border-radius 15px;
+	border-radius: 15px;
 	top: 43%;
 	left: 51%;
 	width: 34%;
 	height: 20%;
+    cursor: pointer;
+    visibility: hidden;
 }
 
 .productCostDiv {
@@ -178,6 +181,119 @@ header > img {
 	//top: 0%;
 }
 
+.btn {
+    background: #3498db;
+    background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+    background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+    background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+    background-image: -o-linear-gradient(top, #3498db, #2980b9);
+    background-image: linear-gradient(to bottom, #3498db, #2980b9);
+    -webkit-border-radius: 31;
+    -moz-border-radius: 31;
+    border-radius: 31px;
+    text-shadow: 2px 1px 3px #666666;
+    font-family: Arial, serif;
+    color: #ffffff;
+    font-size: 20px;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background: #3cb0fd;
+    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+/* The Modal (background) */
+.modal {
+    font-size: 20px;
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.addBtn {
+    border-radius: 15px;
+    font-family: Arial, serif;
+    color: #ffffff;
+    font-size: 19px;
+    width: 10px;
+    padding: 5px;
+    background: #6b90a8;
+    text-decoration: none;
+}
+
+.addBtn:hover {
+    background: #3cb0fd;
+    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.rmBtn {
+    border-radius: 15px;
+    font-family: Arial, serif;
+    color: #ffffff;
+    font-size: 19px;
+    width: 10px;
+    padding: 5px;
+    background: #6b90a8;
+    text-decoration: none;
+}
+
+.rmBtn:hover {
+    background: #3cb0fd;
+    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+    text-decoration: none;
+    cursor: pointer;
+}
 /* For mobile phones: */
 [class*="col-"] {
     width: 100%;
