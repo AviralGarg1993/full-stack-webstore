@@ -16,7 +16,7 @@
 }
 
 
-
+/* Set max width to 1000px */
 body{
 	max-width: 1000px;	
  	background: #f0f7fb;
@@ -25,6 +25,7 @@ body{
     border: 1px solid red;
 }
 
+/* Nothing for now */
 header{
 	
 }
@@ -39,8 +40,9 @@ header{
 	width:  780px;
 }
 
+
 #topImages{
-	display: inline-block;
+	display: inline-block;   /* Inline-block: appears in line  */
 	margin-right: auto;
 	margin-left: auto;
 }
@@ -48,10 +50,11 @@ header{
 
 #navigationMenu{
 	display: inline-block;
-	float: left;
+	float: left;   /* this puts the menu at the left of the page */
 	overflow: hidden;
 }
 
+/* Sets the properties for the ul */
 #navigationMenu ul{
 	list-style-type: none;
 	font-family : Arial;
@@ -63,6 +66,7 @@ header{
 	margin-left: 0px;
 }
 
+/* Each element in the ul is a button */
 #navigationMenu ul button{
 	background-color: #f0ece2;
 	max-width: 200px;
@@ -73,11 +77,13 @@ header{
 	border-radius: 15px;
 }
 
+/* Action to change the button appearance when you hover */
 #navigationMenu ul button:hover{
 	color: #000000;
 	background-color: #ffffff;
 }
 
+/* This is the grid of products */
 #productList{
 	display: block;
 	float: right;
@@ -87,6 +93,7 @@ header{
 	overflow: hidden;   /* so we dont see overflow */
 }
 
+/* Each div containing picture + price + caption */
 .product div{
 	border: 1px solid rgba(0,0,0,0.1);
 	border-radius: 7px;
@@ -94,22 +101,28 @@ header{
 	cursor: pointer;
 }
 
+/* The list of products */
 #productList ul{
 	float: left;
 	overflow: hidden;
 	list-style: none;
 }
-#productList li{
+
+/* Each li within the ul */
+#productList ul li{
 	float: left;
 	overflow: hidden;
 	list-style: none;
 }
 
+/* The caption text */
 .product>div>div{
 	text-align: center;
 	position: relative;
+	font-family: Arial;
 }
 
+/* The price. Interestingly enough, this will also show Arial, because its parent is Arial too */
 .product>div>div>span{
 	top: 120px;
 	width: 100%;
@@ -121,20 +134,24 @@ header{
 	background: #BFCAD8;
 }
 
+/* Gray background when you hover */
 .product:hover div{
 	background: #E6E8EC;
 }
 
+/* Display price when you hover */
 .product:hover div>div>span{
 	visibility: visible;
 }
 
+/* Image of product */
 #productList li img{
 	width: 150px;
 	height: 150px;
 	border-radius: 7px;
 }
 
+/* Footer: nothing interesting */
 #footer{
   display: inline-block;  /* This line did the trick */
   width: 1000px;

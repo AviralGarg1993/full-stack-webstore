@@ -12,24 +12,25 @@
 
  // Function to create the list from the array
  function makeUL(){
+ 	// Create a ul
  	var list = document.createElement('ul');
 
  	for(var i =0; i < navArray.length; i++){
- 		// This creates the item
+ 		
+ 		// This creates the item, and we create it as abutton
  		var item = document.createElement('button');
-    	// This sets the contents
+    	
+    	// This sets the contents of the button
  		item.innerHTML += navArray[i];
+ 		
  		// This adds it to the list
  		list.appendChild(item);
  	}
+
+ 	// Add the completed list to the div
  	document.getElementById("navigationMenu").appendChild(list);
  }
 
- var products = [" "];
 
 
- //Can I use a table if it is scaleable from this point of view? Like easily manageable?
- //function makeTable(){
 
-  
-//}
