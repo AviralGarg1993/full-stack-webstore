@@ -85,14 +85,14 @@ header > img {
 	position: relative;
 }
 
-/*  */
+/* Style for the products list*/
 .productDiv {
 	position: relative;
-//	border: solid green;
 	margin: 20px 30px;
 	float:left;
 }
 
+/* Style for each product image*/
 .productImg {
 	border-radius: 15px;
     opacity: 1;
@@ -102,15 +102,16 @@ header > img {
     backface-visibility: hidden;
 }
 
+/* styling for div containing add/remove buttons and cart image */
 .overlay {
 	position: absolute;
-//	border: solid blue;
     transition: 1s ease;
 	opacity: 0;
     top: 0%;
     left: 0%;
 }
 
+/* styling for div containing border shadow and price div */
 .overlay2 {
 	position: absolute;
     transition: 1s ease;
@@ -124,6 +125,7 @@ header > img {
 	height: 235px;
 }
 
+/* make each product look responsive */
 .productDiv:hover .productImg {
     opacity: 0.3;
 }
@@ -136,6 +138,7 @@ header > img {
     opacity: 0.4;
 }
 
+/* styling for cart image */
 .cartImg {
 	border-radius: 15px;
 	background-color: black;
@@ -144,6 +147,7 @@ header > img {
 	max-height: 170px;
 }
 
+/* styling for add to cart button */
 .addToCartButton{
 	background-color: green;
 	opacity: 0.9;
@@ -157,7 +161,7 @@ header > img {
 
 }
 
-
+/* styling for remove from cart button */
 .removeFromCartButton{
 	background-color: red;
 	opacity: 0.9;
@@ -170,19 +174,21 @@ header > img {
 	height: 20%;
 }
 
+/* styling for cost div */
 .productCostDiv {
 	color: white;
 	position: absolute;
 	top: 80%;
 }
 
+/* styling for product name div */
 .productNameDiv {
 	color: black;
 	position: absolute;
 	//top: 0%;
 }
 
-/* For mobile phones: */
+/* helps easily adjust width using css grid format */
 [class*="col-"] {
     width: 100%;
 }

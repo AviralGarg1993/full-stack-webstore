@@ -1,11 +1,25 @@
+// TODO: try to move them inside functions
+var navMenu;
+var productInfo = [];
+const imgDIR = '/images/products/';
+const INITIAL_QUANTITY = 5;
+const INAVTIVITY_TIME_LIMIT = 30;
+
 console.log('IMPORTANT: Please run the command "npm install" and ' +
     'then "heroku local web" in the source directory');
+
+// GET request to get navigation menu items from the server and call navMenuController function
 httpGetAsync('/navMenuList', navMenuController);
+
+// GET request to get product items from the server and call productListController function
 httpGetAsync('/productList', productListController);
 
-//TODO: move to controller
-document.getElementById('showCartButton').onclick = showCart;
-window.onload = startTimer;
+// Adding on click listener to showCart button
+addShowCartListener();
+
+// Adding on window load listener to start inactiveTimer
+addStartTimerListener();
+
 
 /*
  * MVC design pattern
@@ -14,28 +28,32 @@ window.onload = startTimer;
  * This allows the ease of changing model/view without affecting the other
  */
 
-/*
- * MODEL
- */
-var navMenu;
+/***********************************************************************************************************************
+ *              MODEL
+ **********************************************************************************************************************/
+
 var products = [];
-var productInfo = [];
 var cart = [];
 var inactiveTime = 0;
-const imgDIR = '/images/products/';
-const INITIAL_QUANTITY = 5;
 
-
+/**
+ * reset inactiveTime variable
+ */
 function resetTimer() {
     inactiveTime = 0;
 }
 
+/**
+ * inActive Timer functionality
+ */
 function startTimer() {
-    if (inactiveTime >= 30) {
+    if (inactiveTime >= INAVTIVITY_TIME_LIMIT) {
+		// Inactive for 30 seconds
         alert("Hey there! Are you still planning to buy something?");
         resetTimer();
         startTimer();
     } else {
+		// 1 second yield to the function below
         setTimeout(function () {
             var inactiveTimeDisplay = document.getElementById("inactiveTimeDisplay");
             inactiveTimeDisplay.innerHTML = ++inactiveTime + " seconds";
@@ -45,6 +63,12 @@ function startTimer() {
 }
 
 
+/**
+ * Push another productInfo element
+ * @param name      - stores name of the product
+ * @param quantity  - stores quantity of the product left in store
+ * @param cost      - stores cost of the product
+ */
 function addProductInfo(name, quantity, cost) {
     productInfo[name] = {
         quantity: quantity,
@@ -52,89 +76,172 @@ function addProductInfo(name, quantity, cost) {
     };
 }
 
+/**
+ * Push another element into Products Array
+ * @param name      - stores name of the product
+ * @param quantity  - stores quantity of the product left in store
+ */
 function addProduct(name, quantity) {
     products[name] = quantity;
 }
 
+/**
+ * Convert array (inside a string )to actual JavaScript array
+ * Reason: response from back-end is in the form of string.
+ *          Evem an array returned from back-end is inside a string.
+ *          TODO: Look into how to recieve an actual array
+ * @param str - contains the array in string form
+ */
 function stringToArray(str) {
     return JSON.parse("[" + str + "]");
 }
 
+/**
+ * Sets navMenu array containing array of all navMenu items
+ * @param       - navMenuList navMenu list recieved from backend in string form
+ * @returns {*} - for debugging purposes
+ */
 function setNavMenu(navMenuList) {
     navMenu = stringToArray(navMenuList);
     return navMenu;
 }
 
-// this initializes cart as well
+/**
+ * Sets product list information in products and productInfo arrays
+ * @param productList - Array of products recieved from back-end in string form
+ * @returns {Array} - List of product in JavaScript Array form
+ */
 function initializeProductList(productList) {
     var temp = stringToArray(productList);
+
     temp[0].forEach(function (product) {
         var pName = product.split('_')[0];
         var pQuantity = INITIAL_QUANTITY;
         var pCost = product.split('_')[1];
+
         addProductInfo(pName, pQuantity, pCost);
-
-        // only for assignment-2
-        addProduct(pName, pQuantity);
+        addProduct(pName, pQuantity);               // only for assignment-2
     });
-
     return products;
 }
 
-function getProdCost(product) {
-    return productInfo[product]['cost'];
-}
-
+/**
+ * Checks if product with the name pName is in the cart
+ * @param pName         - name of the product being checked in cart
+ * @returns {boolean}   - true if the product is in the cart, false otherwise
+ */
 function productInCart(pName) {
     return !(cart[pName] === undefined);
 }
 
-/*
- * CONTROLLER
+/**
+ * Decrement the number of products by the name pName from the store
+ * @param pName - name of the product being added to cart
+ */
+function decreaseStock(pName) {
+    --productInfo[pName]['quantity'];
+    --products[pName];
+}
+
+/**
+ * Increment the number of products by the name pName in the store
+ * @param pName - product name
+ */
+function addProductToCart(pName){
+    ++cart[pName];
+}
+
+/**
+ * Increment the number of products by the name pName in the store
+ * @param pName - name of the product being removed from cart
+ */
+function increaseStock(pName) {
+    ++productInfo[pName]['quantity'];
+    ++products[pName];
+}
+
+/**
+ * Decrement the number of product by the name pName in the store
+ * @param pName - product name
+ */
+function removeProductFromCart(pName){
+    delete cart[pName];
+}
+
+/***********************************************************************************************************************
+ *              CONTROLLER
+ **********************************************************************************************************************/
+
+/**
+ * Add on load listener to start the timer when the window has loaded
+ */
+function addStartTimerListener() {
+    window.onload = startTimer;
+}
+
+/**
+ * Add on click listener to show cart when the cart button is clicked
+ */
+function addShowCartListener(){
+    document.getElementById('showCartButton').onclick = showCart;
+}
+
+/**
+ * On click listener to add a product to cart when Add button is clicked
+ * @param productName - name of the product being added to the cart
  */
 function addToCart(productName) {
     resetTimer();
     if (productInfo[productName]['quantity'] <= 0) {
-        // out of stock
+        // Out of stock
     } else {
         if (!productInCart(productName)) {
-            //TODO: move this to model
-            cart[productName] = 0;
+            cart[productName] = 1; // Initializing the product in cart array
+        } else {
+            addProductToCart(productName); //model function
         }
-        --productInfo[productName]['quantity'];
-        --products[productName];
-        ++cart[productName];
+        decreaseStock(productName); //model function
     }
 }
 
+/**
+ * On click listener to remove a product from cart when Remove button is clicked
+ * @param productName - name of the product being removed from cart
+ */
 function removeFromCart(productName) {
     resetTimer();
     if (!productInCart(productName)) {
         // already 0!
         alert(productName + ' does not exist in the cart!');
     } else {
-        ++productInfo[productName]['quantity'];
-        ++products[productName];
+        increaseStock(productName);             // model function
         if (--cart[productName] === 0) {
-            //TODO: move this to model
-            delete cart[productName];
+            removeProductFromCart(productName); // model function
         }
     }
 }
 
+/**
+ * Show the cart as an alert message
+ */
 function showCart() {
-    var alertMsg = '';
-    var cartLength = Object.keys(cart).length;
+    var cartContent = '';
+    var cartLength = Object.keys(cart).length; // to get length of an associative array (cart.length === 0)
     if (cartLength > 0) {
         for (var product in cart) {
-            alertMsg += product + ' : ' + cart[product] + '\n';
+            cartContent += product + ' : ' + cart[product] + '\n';
         }
     } else {
-        alertMsg = "Nothing in cart!";
+        cartContent = "Nothing in cart!";
     }
-    alert(alertMsg);
+    alert(cartContent);
 }
 
+/**
+ * Asynchronous GET request
+ * @param theUrl    - url of the request
+ * @param callback  - callback function for the request
+ */
 function httpGetAsync(theUrl, callback) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function () {
@@ -145,45 +252,69 @@ function httpGetAsync(theUrl, callback) {
     xmlHttp.send(null);
 }
 
+/**
+ * Controller function for Navigation Menu
+ * Callback function that recieves navMenu list from back-end
+ * @param navMenuList
+ */
 function navMenuController(navMenuList) {
-    setNavMenu(navMenuList);
-    renderNavMenu();
+    setNavMenu(navMenuList);    // model function
+    renderNavMenu();            // view function
 }
 
+/**
+ * Controller function for product list
+ * Callback function that recieves product list from back-end
+ * @param navMenuList
+ */
 function productListController(productList) {
-    initializeProductList(productList);
-    renderProductList();
+    initializeProductList(productList); // model function
+    renderProductList();                // view function
 }
 
-/*
- * VIEW
+/***********************************************************************************************************************
+ *              VIEW
+ **********************************************************************************************************************/
+
+/**
+ * renders Navigation Menu
  */
 function renderNavMenu() {
     navMenu[0].forEach(function (menuItem) {
-        var menu = document.getElementById('navigationMenu');
+
+        //Create each navMenu DOM element
         var navButton = document.createElement('li');
         navButton.className = 'navMenuButton';
         navButton.id = menuItem;
         navButton.innerHTML = menuItem;
+
+        //Append it to the navMenu
+        var menu = document.getElementById('navigationMenu');
         menu.appendChild(navButton);
     });
 }
 
 
+/**
+ * Helper function to create DOM elements
+ * @param   {string}  tagName       - HTML tag name (e.g. div, li, span, etc)
+ * @param   {JSON}    attrArray     - list of attributes for the new DOM element
+ * @returns {Element} newNode       - the new DOM element created
+ */
 function createNewNode(tagName, attrArray) {
     var newNode = document.createElement(tagName);
     var keys = Object.keys(attrArray);
 
+    // iterates through all atrributes to be given to the new DOM element
     for (var i = 0; i < keys.length; i++) {
         switch (keys[i]) {
-            case 'class':newNode.className = attrArray[keys[i]];break;
-            case 'id':newNode.id = attrArray[keys[i]];break;
-            case 'src':newNode.src = attrArray[keys[i]];break;
-            case 'innerHTML':newNode.innerHTML = attrArray[keys[i]];break;
-            default:console.log('weird: ' + keys[i]);
+            case 'class':       newNode.className = attrArray[keys[i]]; break;
+            case 'id':          newNode.id = attrArray[keys[i]];        break;
+            case 'src':         newNode.src = attrArray[keys[i]];       break;
+            case 'innerHTML':   newNode.innerHTML = attrArray[keys[i]]; break;
+            default:            console.log('weird: ' + keys[i]);
         }
     }
-
     return newNode;
 }
 
@@ -202,6 +333,9 @@ function createNewNode(tagName, attrArray) {
  *           - remove button
  */
 
+/**
+ * Renders the products
+ */
 function renderProductList() {
 
     for (var product in products) {
@@ -213,6 +347,7 @@ function renderProductList() {
         var overlayDiv  = createNewNode('div',{'class':'overlay'});
         var cartImg     = createNewNode('img',{'class':'cartImg','src':'images/cart.png'});
         var addButton   = createNewNode('button',{'class':'col-5 col-m-5 addToCartButton','innerHTML':'Add'});
+        var removeButton = createNewNode('button',{'class': 'col-5 col-m-5 removeFromCartButton','innerHTML': 'Remove'});
 
         addButton.onclick = function () {
             // TODO: move this to controller
@@ -220,7 +355,6 @@ function renderProductList() {
             addToCart(productName);
         };
 
-        var removeButton = createNewNode('button',{'class': 'col-5 col-m-5 removeFromCartButton','innerHTML': 'Remove'});
         removeButton.onclick = function () {
             // TODO: move this to controller
             var productName = this.parentElement.parentElement.id;
