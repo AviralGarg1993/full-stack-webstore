@@ -1,11 +1,16 @@
+/* Allow images to be within the div without overflowing 
+ * Source:  http://learnlayout.com/clearfix.html
+ */ 
+
 .clearFix {
     overflow: auto;
     zoom: 1;
 }
 
+
 body {
     /* max-width instead of width: to improve the browser's handling of small windows */
-    max-width: 1000px;
+    max-width: 1000px;  /* as  sepecified */
 
     /* centering the text*/
     text-align: center;
@@ -17,44 +22,41 @@ body {
     background-color: rgba(148, 191, 215, 0.24);
 }
 
+/* Adjusting for smaller screen size   */
 .row::after {
     content: "";
     clear: both;
     display: table;
 }
 
+/* Round the images under header */
 header > img {
 	border-radius: 15px;
 }
 
-header > img {
-    border-radius: 15px;
-}
-
-.titleArea > img {
-    border-radius: 100px;
-}
-
+/* Put it to the right of the page */
 #showCartButton {
     float: right;
 }
 
+/* To allow child nodes to have absolute position */
 #mainContent {
-//	border: dotted black;
 	position: relative;
 }
-/* Navigation Menu */
+
+/* Navigation Menu: put it to the left; */
 #navMenuDiv{
-//	border: solid red;
 	float: left;
 }
 
+/* Style for the menu*/
 #navigationMenu {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
+/* Style for each item */
 #navigationMenu li{
     padding: 8px;
     margin-bottom: 7px;
@@ -65,22 +67,25 @@ header > img {
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 
+/* Make it look responsive */
 #navigationMenu li:hover {
     color: #E6E6E6;
     background-color: #002145;
 }
 
+/* The productList images with a hidden scrollbar*/
 #imageGallery {
 	margin-left: 20.82%;
 	overflow: hidden;
-//	border: solid green;
 	padding-bottom: 50px;
 }
 
+/* To allow child nodes to have absolute position */
 #productList{
 	position: relative;
 }
 
+/*  */
 .productDiv {
 	position: relative;
 //	border: solid green;
@@ -109,7 +114,6 @@ header > img {
 .overlay2 {
 	position: absolute;
     transition: 1s ease;
-//	border: green solid;
 	background-color: black;
 	border-radius: 15px;
 	opacity: 0;
