@@ -1,3 +1,25 @@
+/**
+ *
+ * @param name
+ * @param price
+ * @param imageUrl
+ * @constructor
+ */
+var Product = function (name, price, imageUrl){
+    this.name = name;
+    this.price = price;
+    this.imageUrl = imageUrl;
+};
+
+/**
+ *
+ * @param quantity
+ * @returns {number}
+ */
+Product.prototype.computeNetPrice = function(quantity) {
+    return this.price*quantity;
+};
+
 console.log('IMPORTANT: Please run the command "npm install" and ' +
     'then "heroku local web" in the source directory');
 httpGetAsync('/navMenuList', navMenuController);
@@ -49,10 +71,11 @@ function startTimer() {
  * @param cost
  */
 function addProduct(name, quantity, cost) {
+    var imgURI = imgDIR + name + '_' + cost + '.png';
     products[name] = {
-        quantity: quantity,
-        cost: cost
-    };
+        product: new Product(name, cost, imgURI),
+        quantity: quantity
+    }
 }
 
 /**
@@ -104,7 +127,7 @@ function updateCartCost() {
     for (var i = 0; i < keys.length; i++) {
         var pName = keys[i];
         var pQuantity = cart[pName];
-        var pPrice = products[pName].cost.substr(1);
+        var pPrice = products[pName].product.price.substr(1);
 
         console.log('name: ' + pName + 'pQuant: ' + pQuantity + 'pPrice: ' + pPrice);
         totalCost += pPrice*pQuantity;
@@ -187,7 +210,7 @@ function showCart() {
         var totalAmount=0;
         for (var product in cart) {
             var quantity = cart[product];
-            var unitPrice = products[product].cost.substr(1);
+            var unitPrice = products[product].product.price.substr(1);
             var amount = unitPrice*cart[product];
             totalAmount +=amount;
             modalContent += '<tr> <td>' +product + '</td>' + '<td><span id =' + product + ' class="rmBtn">-</span>' + quantity + '<span id =' + product + ' class="addBtn">+</span></td>' + '<td>$' + unitPrice + '</td>' +'<td>$' + amount + '</td>' + '</tr>';
@@ -394,17 +417,18 @@ function createNewElement(tagName, attrArray) {
 
 function renderProductList() {
 
-    for (var product in products) {
+    for (var productName in products) {
+        var product = products[productName].product;
         console.log(product);
-        var pDiv        = createNewElement('div', {'class': 'col-3 col-m-3 productDiv', 'id': product});
-        var pImage      = createNewElement('img', {'class': 'productImg','src': imgDIR + product + '_' + products[product]['cost'] + '.png'});
-        var pName       = createNewElement('div', {'class': 'col-12 col-m-12 productNameDiv', 'innerHTML': product});
+        var pDiv        = createNewElement('div', {'class': 'col-3 col-m-3 productDiv', 'id': product.name});
+        var pImage      = createNewElement('img', {'class': 'productImg','src': product.imageUrl});
+        var pName       = createNewElement('div', {'class': 'col-12 col-m-12 productNameDiv', 'innerHTML': product.name});
         var overlayDiv2 = createNewElement('div', {'class': 'overlay2'});
-        var pCost       = createNewElement('div', {'class': 'col-12 col-m-12 productCostDiv','innerHTML': products[product]['cost']});
+        var pCost       = createNewElement('div', {'class': 'col-12 col-m-12 productCostDiv','innerHTML': product.price});
         var overlayDiv  = createNewElement('div', {'class': 'overlay'});
         var cartImg     = createNewElement('img', {'class': 'cartImg', 'src': 'images/cart.png'});
         var addButton   = createNewElement('button', {'class': 'col-5 col-m-5 addToCartButton', 'innerHTML': 'Add'});
-        var removeButton = createNewElement('button', {'class': 'col-5 col-m-5 removeFromCartButton','id':product+'rBtn','innerHTML': 'Remove'});
+        var removeButton = createNewElement('button', {'class': 'col-5 col-m-5 removeFromCartButton','id':product.name+'rBtn','innerHTML': 'Remove'});
 
         attachAddButtonListener(addButton);
         attachRemoveButtonListener(removeButton);
