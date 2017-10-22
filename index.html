@@ -33,22 +33,24 @@
 
 		<!-- Following Kumseok Jung's solution -->
 
-		<!-- Each product is a li. The whole thing is a div. Within it is another div which contains the img and price. There is another div which has the caption -->
+		<!-- Each product is a li. The whole thing is a div. Within it are 2 divs: 1) which contains the img and price. 2)which has the caption -->
 
-		<
+		
 		<div id="productList">
 			<ul>
-				
-
 				<li class="product">
 					<div>
-						<div>
+						<div id=imageBox">
 							<img src="images/products/Box1_$10.png"/>
-							<span>$10.00</span>  <!-- Now we can use CSS selector to set visibility -->
+							<div id ="hover">
+								<span id="price"> <text> $10.00 </text> </span>  <!-- Now we can use CSS selector to set visibility -->
+								<br/>
+								 <img src = "cart.png" /> </span>
+							</div>
 						</div>
-						<div>
+						<div id="caption">
 							Box 1
-						</div>
+						</div> 
 					</div>
 				</li>
 

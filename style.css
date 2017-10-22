@@ -103,17 +103,6 @@ header{
 }
 
 
-.overlay{
-	z-index: 1;
-	opacity: 0.25;
-	transition: 0.5s;
-	content: "images/cart.png";
-}
-
-.product:hover .overlay{
-	display: block;
-}
-
 /* The list of products */
 #productList ul{
 	float: left;
@@ -136,26 +125,43 @@ header{
 }
 
 /* The price. Interestingly enough, this will also show Arial, because its parent is Arial too */
-.product>div>div>span{
+#imageBox{
 	top: 120px;
 	width: 100%;
 	align-self: center;
-	visibility: hidden;
+	visibility: hidden; 
 	position: absolute;
 	display: block;
 	z-index: +1;
-	background: #BFCAD8;
+}
+
+#hover{
+	visibility: hidden;
+	z-index: +1;
+}
+
+
+#cart{
+	visibility: hidden;
+	z-index: +2;
+}
+
+.product:hover cart{
+	visibility: visible;
 }
 
 /* Gray background when you hover */
-.product:hover div{
+.product:hover {
 	background: #E6E8EC;
+	display: inline-block;
 }
 
 /* Display price when you hover */
-.product:hover div>div>span{
+.product:hover div>div>div{
 	visibility: visible;
 }
+
+
 
 /* Image of product */
 #productList li img{

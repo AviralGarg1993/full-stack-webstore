@@ -13,6 +13,8 @@ var products = {"Box1" : 2, "Box2": 1, "Clothes1": 44, "Clothes2": 55555, "Jeans
 initializeProducts(products);
 
 // Function to initialize the products
+// We can't say it takes in int [] arr, right? :P 
+// So if you pass in array, it is like passing in a whole list of parameters?
 function initializeProducts(params){
 	for (var e in params){
 		console.log("Before  " + e + "  = " + products[e]);  // to check 
