@@ -166,6 +166,7 @@ function addToCart(productName) {
         // out of stock
         alert( productName + ' Out of Stock!');
     	hideAddButton(productName);
+    	showOutOfStockButton(productName);
 
     } else {
         if (!productInCart(productName)) {
@@ -186,6 +187,7 @@ function addToCart(productName) {
 function removeFromCart(productName) {
     resetTimer();
     showAddButton(productName);
+    hideOutOfStockButton(productName);
     if (!productInCart(productName)) {
         // already 0!
         alert(productName + ' does not exist in the cart!');
@@ -380,6 +382,18 @@ function showRemoveButton(productName) {
     document.getElementById(productName+'rBtn').style.visibility = "visible";
 }
 
+
+function showOutOfStockButton(productName) {
+    console.log(productName + 'out of stock');
+    document.getElementById(productName+'oBtn').style.visibility = "visible";
+}
+
+
+function hideOutOfStockButton(productName) {
+    console.log('here');
+    document.getElementById(productName+'oBtn').style.visibility = "hidden";
+}
+
 function renderCartCost() {
     document.getElementById('showCartButton').textContent = 'Cart ($' + totalCost + ')';
 }
@@ -439,15 +453,16 @@ function renderProductList() {
     for (var productName in products) {
         var product = products[productName].product;
         console.log(product);
-        var pDiv        = createNewElement('div', {'class': 'col-3 col-m-3 productDiv', 'id': product.name});
-        var pImage      = createNewElement('img', {'class': 'productImg','src': product.imageUrl});
-        var pName       = createNewElement('div', {'class': 'col-12 col-m-12 productNameDiv', 'innerHTML': product.name});
-        var overlayDiv2 = createNewElement('div', {'class': 'overlay2'});
-        var pCost       = createNewElement('div', {'class': 'col-12 col-m-12 productCostDiv','innerHTML': product.price});
-        var overlayDiv  = createNewElement('div', {'class': 'overlay'});
-        var cartImg     = createNewElement('img', {'class': 'cartImg', 'src': 'images/cart.png'});
-        var addButton   = createNewElement('button', {'class': 'col-5 col-m-5 addToCartButton', 'innerHTML': 'Add', 'id': product.name+'aBtn'});
-        var removeButton = createNewElement('button', {'class': 'col-5 col-m-5 removeFromCartButton','id':product.name+'rBtn','innerHTML': 'Remove'});
+        var pDiv             = createNewElement('div', {'class': 'col-3 col-m-3 productDiv', 'id': product.name});
+        var pImage           = createNewElement('img', {'class': 'productImg','src': product.imageUrl});
+        var pName            = createNewElement('div', {'class': 'col-12 col-m-12 productNameDiv', 'innerHTML': product.name});
+        var overlayDiv2      = createNewElement('div', {'class': 'overlay2'});
+        var pCost       	 = createNewElement('div', {'class': 'col-12 col-m-12 productCostDiv','innerHTML': product.price});
+        var overlayDiv       = createNewElement('div', {'class': 'overlay'});
+        var cartImg          = createNewElement('img', {'class': 'cartImg', 'src': 'images/cart.png'});
+        var addButton        = createNewElement('button', {'class': 'col-5 col-m-5 addToCartButton', 'innerHTML': 'Add', 'id': product.name+'aBtn'});
+        var outOfStockButton = createNewElement('button', {'class': 'col-5 col-m-5 outOfStockButton', 'innerHTML': 'Sorry, out of stock!', 'id': productName+'oBtn'});
+        var removeButton     = createNewElement('button', {'class': 'col-5 col-m-5 removeFromCartButton','innerHTML': 'Remove', 'id':product.name+'rBtn'});
 
         attachAddButtonListener(addButton);
         attachRemoveButtonListener(removeButton);
@@ -459,6 +474,7 @@ function renderProductList() {
         overlayDiv.appendChild(cartImg);
         overlayDiv.appendChild(addButton);
         overlayDiv.appendChild(removeButton);
+        overlayDiv.appendChild(outOfStockButton);
         pDiv.appendChild(overlayDiv);
 
         var productDisplayArea = document.getElementById('productList');

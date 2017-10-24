@@ -169,6 +169,21 @@ header > img {
     visibility: hidden;
 }
 
+.outOfStockButton{
+    background-color: gray;
+    opacity: 0.9;
+    color: white;
+    position: absolute;
+    border-radius: 15px;
+    top: 43%;
+    left: 8%;
+    width: 34%;
+    height: 20%;
+    cursor: pointer;
+    visibility: hidden;
+}
+
+
 .productCostDiv {
 	color: white;
 	position: absolute;
