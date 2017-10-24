@@ -53,7 +53,7 @@ function resetTimer() {
 
 function startTimer() {
     if (inactiveTime >= 30) {
-        //alert("Hey there! Are you still planning to buy something?");
+        alert("Hey there! Are you still planning to buy something?");
         resetTimer();
         startTimer();
     } else {
