@@ -165,6 +165,8 @@ function addToCart(productName) {
     if (products[productName]['quantity'] <= 0) {
         // out of stock
         alert( productName + ' Out of Stock!');
+    	hideAddButton(productName);
+
     } else {
         if (!productInCart(productName)) {
             //TODO: move this to model
@@ -174,6 +176,8 @@ function addToCart(productName) {
         ++cart[productName];
     }
     updateCartCost();
+
+ 
 }
 
 /**
@@ -181,6 +185,7 @@ function addToCart(productName) {
  */
 function removeFromCart(productName) {
     resetTimer();
+    showAddButton(productName);
     if (!productInCart(productName)) {
         // already 0!
         alert(productName + ' does not exist in the cart!');
@@ -192,11 +197,13 @@ function removeFromCart(productName) {
             delete cart[productName];
         }
     }
-    updateCartCost();
+    
+    updateCartCost(pr);
 }
 
 function showCart() {
     updateCartCost();
+    resetTimer();
     var modalContent = '<table style="width:100%">'+
     '<tr>\n' +
         '<th>Product</th>\n' +
@@ -356,6 +363,18 @@ function hideRemoveButton(productName) {
     document.getElementById(productName+'rBtn').style.visibility = "hidden";
 }
 
+function hideAddButton(productName) {
+    console.log('reached hideAddButton');
+    document.getElementById(productName+'aBtn').style.visibility = "hidden";
+}
+
+function showAddButton(productName) {
+    console.log('reached hideAddButton');
+    document.getElementById(productName+'aBtn').style.visibility = "visible";
+}
+
+
+
 function showRemoveButton(productName) {
     console.log('here');
     document.getElementById(productName+'rBtn').style.visibility = "visible";
@@ -427,7 +446,7 @@ function renderProductList() {
         var pCost       = createNewElement('div', {'class': 'col-12 col-m-12 productCostDiv','innerHTML': product.price});
         var overlayDiv  = createNewElement('div', {'class': 'overlay'});
         var cartImg     = createNewElement('img', {'class': 'cartImg', 'src': 'images/cart.png'});
-        var addButton   = createNewElement('button', {'class': 'col-5 col-m-5 addToCartButton', 'innerHTML': 'Add'});
+        var addButton   = createNewElement('button', {'class': 'col-5 col-m-5 addToCartButton', 'innerHTML': 'Add', 'id': product.name+'aBtn'});
         var removeButton = createNewElement('button', {'class': 'col-5 col-m-5 removeFromCartButton','id':product.name+'rBtn','innerHTML': 'Remove'});
 
         attachAddButtonListener(addButton);
