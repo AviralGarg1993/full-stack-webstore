@@ -339,6 +339,48 @@ function attachRemoveButtonListener(removeButton) {
     };
 }
 
+/* 
+ ==========================================================================================================================================================================
+  CODE FOR ASSIGNMENT 4
+ 
+*/
+
+// Part 1: Function for making AJAX calls
+function ajaxGet(url, successCallback, errorCallback){
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+
+        if(this.readyState == 4 && this.status == 200){
+            // Success
+            var responseText = xhttp.responseText;
+            var responseJSON = JSON.parse(responseText);
+            successCallback(responseJSON);        // this is calling. the function will be "defined" in the call to ajaxGet
+        }
+
+        else {
+            // Failure
+            errorCallback(this.status);
+        }
+    }
+
+    xhttp.open("GET", url, true);
+    xhttp.send();
+         
+}
+
+/* Kumseok's Example
+
+ajaxGet("google.com/products", function(response){
+    products = response;
+}, function(error){
+    if (error === 404) alert("Not found");
+    else if (error === 500) alert("Server error")
+})
+/*
+ =============================================================================================================================================================================
+ */
+
 
 
 
