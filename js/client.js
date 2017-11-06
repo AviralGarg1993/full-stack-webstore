@@ -22,8 +22,8 @@ Product.prototype.computeNetPrice = function(quantity) {
 
 console.log('IMPORTANT: Please run the command "npm install" and ' +
     'then "heroku local web" in the source directory');
-httpGetAsync('/navMenuList', navMenuController);
-httpGetAsync('/productList', productListController);
+ajaxGet('/navMenuList', navMenuController, getError);       // Modified for Assignment 4
+ajaxGet('/productList', productListController, getError);   // Modified for Assignment 4
 
 //TODO: move to controller
 document.getElementById('showCartButton').onclick = showCart;
@@ -284,19 +284,32 @@ function showCart() {
     }
 }
 
-/**
- * @param theUrl
- * @param callback
+
+/*
+ *  MODIFIED FOR ASSIGNMENT 4
  */
-function httpGetAsync(theUrl, callback) {
+
+/**
+ * @param url              : The url we make the AJAX request to
+ * @param successCallback  : Function to run when our request is successful
+ * @param errorCallback    : Function to run when the request is not successful / returns an error 
+ */
+
+function ajaxGet(url, successCallback, errorCallback){
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function () {
         if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
-            callback(xmlHttp.response);
+            successCallback(xmlHttp.response);
+        else 
+            errorCallback();
     };
-    xmlHttp.open("GET", theUrl, true); // true for asynchronous
+
+    xmlHttp.open("GET", url, true); // true for asynchronous
     xmlHttp.send(null);
+
 }
+
+
 
 /**
  * @param navMenuList
@@ -339,52 +352,16 @@ function attachRemoveButtonListener(removeButton) {
     };
 }
 
-/* 
- ==========================================================================================================================================================================
-  CODE FOR ASSIGNMENT 4
- 
-*/
 
-// Part 1: Function for making AJAX calls
-function ajaxGet(url, successCallback, errorCallback){
+/**
+ * Added for Assignment 4
+ * Function getError() : this is a generalised errorCallback for the ajaxGet function
+ */ 
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-
-        if(this.readyState == 4 && this.status == 200){
-            // Success
-            var responseText = xhttp.responseText;
-            var responseJSON = JSON.parse(responseText);
-            successCallback(responseJSON);        // this is calling. the function will be "defined" in the call to ajaxGet
-        }
-
-        else {
-            // Failure
-            errorCallback(this.status);
-        }
-    }
-
-    xhttp.open("GET", url, true);
-    xhttp.send();
-         
+// Might need to change it for task 3: Repeat the AJAX get call on error
+function getError(){
+    alert("Sorry, we could not connect to the remote server");
 }
-
-/* Kumseok's Example
-
-ajaxGet("google.com/products", function(response){
-    products = response;
-}, function(error){
-    if (error === 404) alert("Not found");
-    else if (error === 500) alert("Server error")
-})
-/*
- =============================================================================================================================================================================
- */
-
-
-
-
-
 
 
 
