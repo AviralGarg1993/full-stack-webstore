@@ -2,12 +2,14 @@
  *
  * @param name
  * @param price
+ * @param quantity      // Added for Assignment 4
  * @param imageUrl
  * @constructor
  */
-var Product = function (name, price, imageUrl){
+var Product = function (name, price, quantity, imageUrl){
     this.name = name;
     this.price = price;
+    this.quantity = quantity;
     this.imageUrl = imageUrl;
 };
 
@@ -22,8 +24,8 @@ Product.prototype.computeNetPrice = function(quantity) {
 
 console.log('IMPORTANT: Please run the command "npm install" and ' +
     'then "heroku local web" in the source directory');
-ajaxGet('/navMenuList', navMenuController, getError);       // Modified for Assignment 4
-ajaxGet('/productList', productListController, getError);   // Modified for Assignment 4
+ajaxGet('/navMenuList', navMenuController, getError);       // Modified for Assignment 4 :: Need to modify again I guess
+ajaxGet('https://cpen400a-bookstore.herokuapp.com/products', productListController, getError);   // Modified for Assignment 4
 
 //TODO: move to controller
 document.getElementById('showCartButton').onclick = showCart;
@@ -70,11 +72,18 @@ function startTimer() {
  * @param name
  * @param quantity
  * @param cost
+
+Got rid of this. Probably not needed
+================================================================
+ * @param imageURL                   // Added for Assignment 4
+===============================================================
+ 
  */
 function addProduct(name, quantity, cost) {
-    var imgURI = imgDIR + name + '_' + cost + '.png';
+    // var imgURI = imgDIR + name + '_' + cost + '.png';
+    var imgURI = "https://cpen400a-bookstore.herokuapp.com/images/" + name + ".png";
     products[name] = {
-        product: new Product(name, cost, imgURI),
+        product: new Product(name, cost, quantity, imgURI),
         quantity: quantity
     }
 }
@@ -101,12 +110,17 @@ function setNavMenu(navMenuList) {
  * @param productList
  * @return {Array}
  */
+
+/* NEED TO MODIFY IT TO USE JSON */
+
 function initializeProductList(productList) {
     var temp = stringToArray(productList);
     temp[0].forEach(function (product) {
         var pName = product.split('_')[0];
         var pQuantity = INITIAL_QUANTITY;
         var pCost = product.split('_')[1];
+
+        // Need to add the image? No. Because add product gets the image from the name + URL
         addProduct(pName, pQuantity, pCost);
     });
 
