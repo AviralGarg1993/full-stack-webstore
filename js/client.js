@@ -13,6 +13,8 @@ var Product = function (name, price, quantity, imageUrl){
     this.imageUrl = imageUrl;
 };
 
+var url = 'https://cpen400a-bookstore.herokuapp.com/products';
+
 /**
  *
  * @param quantity
@@ -25,7 +27,7 @@ Product.prototype.computeNetPrice = function(quantity) {
 console.log('IMPORTANT: Please run the command "npm install" and ' +
     'then "heroku local web" in the source directory');
 ajaxGet('/navMenuList', navMenuController, getError);       // Modified for Assignment 4 :: Need to modify again I guess
-ajaxGet('https://cpen400a-bookstore.herokuapp.com/products', productListController, getError);   // Modified for Assignment 4
+ajaxGet(url, productListController, getError);   // Modified for Assignment 4
 
 //TODO: move to controller
 document.getElementById('showCartButton').onclick = showCart;
@@ -114,6 +116,8 @@ function setNavMenu(navMenuList) {
 /* NEED TO MODIFY IT TO USE JSON */
 
 function initializeProductList(productList) {
+
+ /*
     var temp = stringToArray(productList);
     temp[0].forEach(function (product) {
         var pName = product.split('_')[0];
@@ -122,9 +126,11 @@ function initializeProductList(productList) {
 
         // Need to add the image? No. Because add product gets the image from the name + URL
         addProduct(pName, pQuantity, pCost);
-    });
-
-    return products;
+*/
+    
+    // instead of this, use JSON parsing
+    console.log(productList);
+    
 }
 
 /**
@@ -313,9 +319,9 @@ function ajaxGet(url, successCallback, errorCallback){
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function () {
         if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
-            successCallback(xmlHttp.response);
+            successCallback(xmlHttp.responseText);
         else 
-            errorCallback();
+            errorCallback(this.status);
     };
 
     xmlHttp.open("GET", url, true); // true for asynchronous
@@ -373,8 +379,8 @@ function attachRemoveButtonListener(removeButton) {
  */ 
 
 // Might need to change it for task 3: Repeat the AJAX get call on error
-function getError(){
-    alert("Sorry, we could not connect to the remote server");
+function getError(str){
+    console.log("The return error is " + str);
 }
 
 
