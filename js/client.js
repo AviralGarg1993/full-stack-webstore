@@ -134,7 +134,7 @@ function resetTimer() {
 
 function startTimer() {
     if (inactiveTime >= 30) {
-        alert("Hey there! Are you still planning to buy something?");
+      //  alert("Hey there! Are you still planning to buy something?");
         resetTimer();
         startTimer();
     } else {
@@ -157,6 +157,7 @@ function addProduct(name, quantity, cost) {
         product: new Product(name, cost, imageURL, quantity)
     }
 }
+
 
 /**
  *
@@ -311,11 +312,96 @@ function showCart() {
         modal.style.display = "none";
     };
 
+
+
+// ********************************************************************************************************************************
+//   TASK 4: Adding the AJAX request and synchronization to the modal checkout button
+//   TODO: Move to M/V/C
+// ********************************************************************************************************************************
+    
+    var serverProducts = [];
+    var syncStatus = 0;
+
+
+    function addServerList(name, quantity, cost) {
+    
+    var imageURL = url + '/images/' + name + '.png';
+    
+    serverProducts[name] = {
+        product: new Product(name, cost, imageURL, quantity)
+    }
+}
+
+
+    // Okay so gotta do .product.price
+    function clientSync(array){
+        for (var e in array){
+            if(array[e].product.price === products[e].product.price && array[e].product.quantity === products[e].product.quantity){
+                //console.log("same " + array[e].product.price + " " + products[e].product.price);
+                syncStatus = 1;
+            }
+        }
+    }
+
+
+
+
+    function initServerProducts(list){
+        for(var e in list){
+             addServerList(list[e].name, list[e].quantity, list[e].price);
+        }
+    }
+
+
+     // Is this a sufficient error function? And it seems like I keep getting this console log all the time
+     function modalCheckoutError(xhr, url, str){
+        console.log("The errors are " + xhr + " " + url + " " + str);
+    }
+
+
+    function checkoutSuccess(productList){
+        var serverList = JSON.parse(productList);
+        // We first do JSON Parse  :: complete
+        initServerProducts(serverList);
+        console.log("init done");
+        console.log(serverProducts);
+        clientSync(serverProducts);
+
+        if (syncStatus) alert("Matches");
+
+        // Then compare
+        // If same, confirm
+        // If not same, notify
+    }
+
+
     var modalCheckOut = document.getElementsByClassName('modalCheckOut')[0];
     modalCheckOut.onclick = function() {
         modal.style.display = "none";
+
+       // send AJAX request , and sync with the client side`
+       ajaxGet(url + '/products', checkoutSuccess, modalCheckoutError);
+    
     };
 
+// ********************************************************************************************************************************
+
+// ********************************************************************************************************************************
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+// *********************************************************************************************************************************
 
 
     //TODO: take the following two functions out of this function
@@ -329,6 +415,7 @@ function showCart() {
         };
     }
 
+
     var modalRemoveButtons = document.getElementsByClassName("rmBtn");
     console.log(modalRemoveButtons);
     for(var i=0; i<modalRemoveButtons.length;i++) {
@@ -337,6 +424,7 @@ function showCart() {
             showCart();
         };
     }
+
 
     document.onkeydown = function(evt) {
         evt = evt || window.event;
