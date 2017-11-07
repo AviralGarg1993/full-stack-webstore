@@ -315,7 +315,7 @@ function showCart() {
 
 
 /*
- ********************************************************************************************************************************
+ ***********************************************************************************************************************************
    TASK 4: Adding the AJAX request and synchronization to the modal checkout button
    TODO: Move to M/V/C
 
@@ -324,9 +324,9 @@ TASKS DONE:
     * Confirms with user if in sync      :)
     * Informs user if price changes      :)
     * Informs user if quantity less      :) 
-    
-    * Update cart with new info          :( ======================>
-  ********************************************************************************************************************************
+
+    * Update cart with new info          :) :S :S  ======================>  NOT SURE WHAT TO DO // bUT I THINK IT'S DONE. TASK 5 LEFT
+  *************************************************************************************************************************************
  */   
     var serverProducts = [];
     var priceSyncStatus = 0;
@@ -350,17 +350,25 @@ TASKS DONE:
             } else {
                 priceSyncStatus = 0;
                 confirm("The price of " + products[e].product.name + " changed from $" + products[e].product.price + " to $" + serverProducts[e].product.price + ". Proceed?");
+                cart[e].product.price = serverProducts[e].product.price;
             }
         }
 
         /* Check if quantity in sync */
         for (var e in array){
-            if(array[e] < serverProducts[e].product.quantity){
+            if(array[e] <= serverProducts[e].product.quantity){
                 quantitySyncStatus = 1;
                 console.log(" :) :) The quantity of " + products[e].product.name + " in cart is  " + array[e] + " and in server is  " + serverProducts[e].product.quantity);
-            } else {
+            } 
+
+            else if (serverProducts[e].product.quantity === 0){
+                removeFromCart[serverProducts[e].product.name];
+                console.log("We removed " + serverProducts[e].product.name + " from cart");
+            }
+
+            else {
                 quantitySyncStatus = 0;
-                         alert("Sorry :( :( The quantity of " + products[e].product.name + " in cart is  " + array[e] + " but availability is  " + serverProducts[e].product.quantity);
+                alert("Sorry :( :( The quantity of " + products[e].product.name + " in cart is  " + array[e] + " but availability is  " + serverProducts[e].product.quantity);
             }
         }
 
