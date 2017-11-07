@@ -1,3 +1,8 @@
+/* Some Global variables we might need */
+var url = 'https://cpen400a-bookstore.herokuapp.com/products';
+var numTries = 5; 
+
+
 /**
  *
  * @param name
@@ -12,8 +17,6 @@ var Product = function (name, price, quantity, imageUrl){
     this.quantity = quantity;
     this.imageUrl = imageUrl;
 };
-
-var url = 'https://cpen400a-bookstore.herokuapp.com/products';
 
 /**
  *
@@ -139,7 +142,7 @@ function updateCartCost() {
         var pQuantity = cart[pName];
         var pPrice = products[pName].product.price.substr(1);
 
-        console.log('name: ' + pName + 'pQuant: ' + pQuantity + 'pPrice: ' + pPrice);
+       // console.log('name: ' + pName + 'pQuant: ' + pQuantity + 'pPrice: ' + pPrice);
         totalCost += pPrice*pQuantity;
     }
 
@@ -270,7 +273,7 @@ function showCart() {
     }
 
     var modalRemoveButtons = document.getElementsByClassName("rmBtn");
-    console.log(modalRemoveButtons);
+   // console.log(modalRemoveButtons);
     for(var i=0; i<modalRemoveButtons.length;i++) {
         modalRemoveButtons[i].onclick = function () {
             removeFromCart(this.id);
@@ -294,6 +297,8 @@ function showCart() {
 }
 
 
+
+
 /*
  *  MODIFIED FOR ASSIGNMENT 4
  */
@@ -305,13 +310,43 @@ function showCart() {
  */
 
 function ajaxGet(url, successCallback, errorCallback){
+
     var xmlHttp = new XMLHttpRequest();
+
     xmlHttp.onreadystatechange = function () {
         if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
             successCallback(xmlHttp.responseText);
+
+
+
+/* ****************************************************************
+   TASK 3
+/* **************************************************************** */ 
+        // 408 implies timeout
+        else if (xmlHttp.status === 500 || xmlHttp.status === 408){
+            console.log("Returned error 500 or timeout");
+            var tries = 0;
+
+            // Make repeated calls until succeess 
+            while(tries < numTries && xmlHttp.status != 200){
+                console.log("Currently at try no. " + tries);
+                ajaxGet(url, successCallback, errorCallback);
+                tries ++;
+            }
+        }    
+/***********************************************************************
+ 
+ ***********************************************************************/
+
+        
+        
         else 
             errorCallback(this.status);
     };
+
+    xmlHttp.onTimeout = function(){
+        repeatCall();
+    }
 
     xmlHttp.open("GET", url, true); // true for asynchronous
     xmlHttp.send(null);
@@ -482,7 +517,7 @@ function renderProductList() {
 
     for (var productName in products) {
         var product = products[productName].product;
-        console.log(product);
+     //   console.log(product);
         var pDiv             = createNewElement('div', {'class': 'col-3 col-m-3 productDiv', 'id': product.name});
         var pImage           = createNewElement('img', {'class': 'productImg','src': product.imageUrl});
         var pName            = createNewElement('div', {'class': 'col-12 col-m-12 productNameDiv', 'innerHTML': product.name});
