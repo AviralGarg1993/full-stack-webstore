@@ -35,12 +35,12 @@ fs.readdir(productImageFolder, function (err, files) {
         //console.log(arr);
     });
 });
-
-app.get("/productList", function (request, response) {
+/*
+app.get("/products", function (request, response) {
     console.log(productArray);
 	response.send(productArray);
 });
-
+*/
 app.get("/dreams/:tag", function (request, response) {
     console.log("hello" + request.params.tag);
     response.send(dreams);

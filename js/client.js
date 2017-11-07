@@ -1,3 +1,16 @@
+
+var productInfo;
+
+var navMenu;
+var products = [];
+var cart = [];
+var inactiveTime = 0;
+var totalCost = 0;
+var url = '';
+const XHR_COUNT_LIMIT = 5;
+const XHR_TIMEOUT = 5000; // in ms
+var productsXhrReqCount = 0;
+
 /**
  *
  * @param name
@@ -5,10 +18,11 @@
  * @param imageUrl
  * @constructor
  */
-var Product = function (name, price, imageUrl){
+var Product = function (name, price, imageUrl, quantity){
     this.name = name;
     this.price = price;
     this.imageUrl = imageUrl;
+    this.quantity = quantity;
 };
 
 /**
@@ -20,10 +34,84 @@ Product.prototype.computeNetPrice = function(quantity) {
     return this.price*quantity;
 };
 
-console.log('IMPORTANT: Please run the command "npm install" and ' +
-    'then "heroku local web" in the source directory');
-httpGetAsync('/navMenuList', navMenuController);
-httpGetAsync('/productList', productListController);
+
+function navMenuServerError(errMsg) {
+    console.warn('Error while fetching navigation menu list from the server. \nError Message: ' + errMsg);
+}
+function productListServerError(req, url, msg) {
+    if((req.readyState === 4)&& ++productsXhrReqCount <= XHR_COUNT_LIMIT){
+        console.log(msg + '\nRequesting Again! # of repeats: ' + productsXhrReqCount);
+        req.open('Get', url);
+        req.send();
+    } else if(productsXhrReqCount > XHR_COUNT_LIMIT){
+        console.log('Request #: ' + productsXhrReqCount + 'Exceded max req limit. To increase limit, change XHR_COUNT_LIMIT');
+        productsXhrReqCount = 0;
+    }
+
+
+
+}
+
+/*===============================================================================*/
+
+
+
+/**
+ * @param url
+ * @param successCallback
+ * @param errorCallback
+ */
+
+var ajaxGet = function(url, successCallback, errorCallback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.onload = function () {
+        if (xhr.status === 200)
+            successCallback(xhr.response);
+        else if (xhr.status === 500)
+            errorCallback(xhr, url, '500 status!');
+    };
+    xhr.onerror = errorCallback(xhr, url, 'xhr.onerror problem!');
+    xhr.onabort = function () {
+        console.log('Request Aborted');
+    };
+    xhr.ontimeout = function () {
+        var msg = XHR_TIMEOUT + 'ms timout';
+        errorCallback(xhr, url, msg);
+    };
+    xhr.timeout = XHR_TIMEOUT;	 // Wait at most 5000 ms for a response
+    console.log("Sending request: " + xhr);
+    xhr.send(null);
+};
+var tmp1, tmp2;
+function init() {
+
+    var isMyServer = false; // false for assignments
+    const DEV_MSG = 'IMPORTANT: Please run the command "npm install" and then "heroku local web" in the source directory';
+    const CPEN_URL = 'https://cpen400a-bookstore.herokuapp.com';
+
+    if(!isMyServer) {
+        url = CPEN_URL;
+    }
+
+    // initial message in developer console
+    console.log(DEV_MSG);
+
+
+    // GET requests to my server
+    tmp1 = new ajaxGet('/navMenuList', navMenuController, navMenuServerError);
+
+    console.log(tmp1);
+    // GET requests to cpen server
+    ajaxGet(url + '/products', productListController, productListServerError);
+
+}
+
+init();
+
+/*===============================================================================*/
+
+
 
 //TODO: move to controller
 document.getElementById('showCartButton').onclick = showCart;
@@ -39,13 +127,6 @@ window.onload = startTimer;
 /*
  * MODEL
  */
-var navMenu;
-var products = [];
-var cart = [];
-var inactiveTime = 0;
-const imgDIR = '/images/products/';
-const INITIAL_QUANTITY = 5;
-var totalCost = 0;
 
 function resetTimer() {
     inactiveTime = 0;
@@ -71,19 +152,10 @@ function startTimer() {
  * @param cost
  */
 function addProduct(name, quantity, cost) {
-    var imgURI = imgDIR + name + '_' + cost + '.png';
+    var imageURL = url + '/images/' + name + '.png';
     products[name] = {
-        product: new Product(name, cost, imgURI),
-        quantity: quantity
+        product: new Product(name, cost, imageURL, quantity)
     }
-}
-
-/**
- *
- * @param str
- */
-function stringToArray(str) {
-    return JSON.parse("[" + str + "]");
 }
 
 /**
@@ -92,22 +164,20 @@ function stringToArray(str) {
  * @returns {*}
  */
 function setNavMenu(navMenuList) {
-    navMenu = stringToArray(navMenuList);
+    navMenu = JSON.parse(navMenuList);
     return navMenu;
 }
 
 /**
- * @param productList
  * @return {Array}
+ * @param productList
  */
 function initializeProductList(productList) {
-    var temp = stringToArray(productList);
-    temp[0].forEach(function (product) {
-        var pName = product.split('_')[0];
-        var pQuantity = INITIAL_QUANTITY;
-        var pCost = product.split('_')[1];
-        addProduct(pName, pQuantity, pCost);
-    });
+    console.log(productList);
+    productInfo = JSON.parse(productList);
+
+    for(var name in productInfo)
+        addProduct(productInfo[name].name, productInfo[name].quantity, productInfo[name].price);
 
     return products;
 }
@@ -127,7 +197,7 @@ function updateCartCost() {
     for (var i = 0; i < keys.length; i++) {
         var pName = keys[i];
         var pQuantity = cart[pName];
-        var pPrice = products[pName].product.price.substr(1);
+        var pPrice = products[pName].product.price;
 
         console.log('name: ' + pName + 'pQuant: ' + pQuantity + 'pPrice: ' + pPrice);
         totalCost += pPrice*pQuantity;
@@ -162,7 +232,7 @@ function updateCartCost() {
 function addToCart(productName) {
     resetTimer();
     showRemoveButton(productName);
-    if (products[productName]['quantity'] <= 0) {
+    if (products[productName].product.quantity <= 0) {
         // out of stock
         alert( productName + ' Out of Stock!');
     	hideAddButton(productName);
@@ -173,7 +243,7 @@ function addToCart(productName) {
             //TODO: move this to model
             cart[productName] = 0;
         }
-        --products[productName]['quantity'];
+        --products[productName].product.quantity;
         ++cart[productName];
     }
     updateCartCost();
@@ -192,7 +262,7 @@ function removeFromCart(productName) {
         // already 0!
         alert(productName + ' does not exist in the cart!');
     } else {
-        ++products[productName]['quantity'];
+        ++products[productName].product.quantity;
         if (--cart[productName] === 0) {
             hideRemoveButton(productName);
             //TODO: move this to model
@@ -200,7 +270,7 @@ function removeFromCart(productName) {
         }
     }
     
-    updateCartCost(pr);
+    updateCartCost();
 }
 
 function showCart() {
@@ -219,7 +289,7 @@ function showCart() {
         var totalAmount=0;
         for (var product in cart) {
             var quantity = cart[product];
-            var unitPrice = products[product].product.price.substr(1);
+            var unitPrice = products[product].product.price;
             var amount = unitPrice*cart[product];
             totalAmount +=amount;
             modalContent += '<tr> <td>' +product + '</td>' + '<td><span id =' + product + ' class="rmBtn">-</span>' + quantity + '<span id =' + product + ' class="addBtn">+</span></td>' + '<td>$' + unitPrice + '</td>' +'<td>$' + amount + '</td>' + '</tr>';
@@ -270,7 +340,7 @@ function showCart() {
 
     document.onkeydown = function(evt) {
         evt = evt || window.event;
-        if (evt.keyCode == 27) {
+        if (evt.keyCode === 27) {
 
             modal.style.display = "none";
         }
@@ -283,19 +353,6 @@ function showCart() {
     }
 }
 
-/**
- * @param theUrl
- * @param callback
- */
-function httpGetAsync(theUrl, callback) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function () {
-        if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
-            callback(xmlHttp.response);
-    };
-    xmlHttp.open("GET", theUrl, true); // true for asynchronous
-    xmlHttp.send(null);
-}
 
 /**
  * @param navMenuList
@@ -309,6 +366,7 @@ function navMenuController(navMenuList) {
  * @param productList
  */
 function productListController(productList) {
+    productsXhrReqCount = 0;
     initializeProductList(productList);
     renderProductList();
 }
@@ -399,7 +457,7 @@ function renderCartCost() {
 }
 
 function renderNavMenu() {
-    navMenu[0].forEach(function (menuItem) {
+    navMenu.forEach(function (menuItem) {
         var menu = document.getElementById('navigationMenu');
         var navButton = document.createElement('li');
         navButton.className = 'navMenuButton';
@@ -452,12 +510,11 @@ function renderProductList() {
 
     for (var productName in products) {
         var product = products[productName].product;
-        console.log(product);
         var pDiv             = createNewElement('div', {'class': 'col-3 col-m-3 productDiv', 'id': product.name});
         var pImage           = createNewElement('img', {'class': 'productImg','src': product.imageUrl});
         var pName            = createNewElement('div', {'class': 'col-12 col-m-12 productNameDiv', 'innerHTML': product.name});
         var overlayDiv2      = createNewElement('div', {'class': 'overlay2'});
-        var pCost       	 = createNewElement('div', {'class': 'col-12 col-m-12 productCostDiv','innerHTML': product.price});
+        var pCost       	 = createNewElement('div', {'class': 'col-12 col-m-12 productCostDiv','innerHTML': '$' + product.price});
         var overlayDiv       = createNewElement('div', {'class': 'overlay'});
         var cartImg          = createNewElement('img', {'class': 'cartImg', 'src': 'images/cart.png'});
         var addButton        = createNewElement('button', {'class': 'col-5 col-m-5 addToCartButton', 'innerHTML': 'Add', 'id': product.name+'aBtn'});
