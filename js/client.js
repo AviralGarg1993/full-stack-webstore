@@ -314,36 +314,57 @@ function showCart() {
 
 
 
-// ********************************************************************************************************************************
-//   TASK 4: Adding the AJAX request and synchronization to the modal checkout button
-//   TODO: Move to M/V/C
-// ********************************************************************************************************************************
-    
-    var serverProducts = [];
-    var syncStatus = 0;
+/*
+ ********************************************************************************************************************************
+   TASK 4: Adding the AJAX request and synchronization to the modal checkout button
+   TODO: Move to M/V/C
 
+TASKS DONE:
+    * Sends AJAX Request on click        :)
+    * Confirms with user if in sync      :)
+    * Informs user if price changes      :)
+    * Informs user if quantity less      :) 
+    
+    * Update cart with new info          :( ======================>
+  ********************************************************************************************************************************
+ */   
+    var serverProducts = [];
+    var priceSyncStatus = 0;
+    var quantitySyncStatus = 0;
 
     function addServerList(name, quantity, cost) {
-    
-    var imageURL = url + '/images/' + name + '.png';
-    
-    serverProducts[name] = {
-        product: new Product(name, cost, imageURL, quantity)
-    }
-}
-
-
-    // Okay so gotta do .product.price
-    function clientSync(array){
-        for (var e in array){
-            if(array[e].product.price === products[e].product.price && array[e].product.quantity === products[e].product.quantity){
-                //console.log("same " + array[e].product.price + " " + products[e].product.price);
-                syncStatus = 1;
-            }
+        var imageURL = url + '/images/' + name + '.png';
+        serverProducts[name] = {
+            product: new Product(name, cost, imageURL, quantity)
         }
     }
 
 
+    function clientSync(array){
+        
+        /* Check if prices in sync */
+        for (var e in array){
+            if(serverProducts[e].product.price === products[e].product.price){
+                priceSyncStatus = 1;
+                console.log("The price of " + products[e].product.name + " changed from " + products[e].product.price + " to " + serverProducts[e].product.price);
+            } else {
+                priceSyncStatus = 0;
+                confirm("The price of " + products[e].product.name + " changed from $" + products[e].product.price + " to $" + serverProducts[e].product.price + ". Proceed?");
+            }
+        }
+
+        /* Check if quantity in sync */
+        for (var e in array){
+            if(array[e] < serverProducts[e].product.quantity){
+                quantitySyncStatus = 1;
+                console.log(" :) :) The quantity of " + products[e].product.name + " in cart is  " + array[e] + " and in server is  " + serverProducts[e].product.quantity);
+            } else {
+                quantitySyncStatus = 0;
+                         alert("Sorry :( :( The quantity of " + products[e].product.name + " in cart is  " + array[e] + " but availability is  " + serverProducts[e].product.quantity);
+            }
+        }
+
+    }
 
 
     function initServerProducts(list){
@@ -353,34 +374,31 @@ function showCart() {
     }
 
 
-     // Is this a sufficient error function? And it seems like I keep getting this console log all the time
-     function modalCheckoutError(xhr, url, str){
-        console.log("The errors are " + xhr + " " + url + " " + str);
-    }
-
-
     function checkoutSuccess(productList){
         var serverList = JSON.parse(productList);
         // We first do JSON Parse  :: complete
         initServerProducts(serverList);
         console.log("init done");
         console.log(serverProducts);
-        clientSync(serverProducts);
+        
+        // Sync the prices in cart
+        clientSync(cart);
+        
+        // Update the products
+        //products = serverList;
 
-        if (syncStatus) alert("Matches");
+        if (priceSyncStatus && quantitySyncStatus){
+            confirm("Price and availability confirmed. Do you want to proceed?");
+        } 
 
-        // Then compare
-        // If same, confirm
-        // If not same, notify
     }
-
 
     var modalCheckOut = document.getElementsByClassName('modalCheckOut')[0];
     modalCheckOut.onclick = function() {
         modal.style.display = "none";
 
-       // send AJAX request , and sync with the client side`
-       ajaxGet(url + '/products', checkoutSuccess, modalCheckoutError);
+       // send AJAX request , and sync with the client side, if error try again until a few times
+       ajaxGet(url + '/products', checkoutSuccess, productListServerError);
     
     };
 
