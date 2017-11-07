@@ -74,13 +74,8 @@ function startTimer() {
  * @param name
  * @param quantity
  * @param cost
-
-Got rid of this. Probably not needed
-================================================================
- * @param imageURL                   // Added for Assignment 4
-===============================================================
- 
  */
+
 function addProduct(name, quantity, cost) {
     // var imgURI = imgDIR + name + '_' + cost + '.png';
     var imgURI = "https://cpen400a-bookstore.herokuapp.com/images/" + name + ".png";
@@ -108,29 +103,23 @@ function setNavMenu(navMenuList) {
     return navMenu;
 }
 
+
 /**
  * @param productList
  * @return {Array}
  */
 
-/* NEED TO MODIFY IT TO USE JSON */
-
 function initializeProductList(productList) {
+ 
+    var temp = JSON.parse(productList);
 
- /*
-    var temp = stringToArray(productList);
-    temp[0].forEach(function (product) {
-        var pName = product.split('_')[0];
-        var pQuantity = INITIAL_QUANTITY;
-        var pCost = product.split('_')[1];
-
-        // Need to add the image? No. Because add product gets the image from the name + URL
+    for (var p in temp) {
+        var key = temp[p];
+        var pName = key["name"];
+        var pQuantity = key["quantity"];
+        var pCost = key["price"];
         addProduct(pName, pQuantity, pCost);
-*/
-    
-    // instead of this, use JSON parsing
-    console.log(productList);
-    
+    }
 }
 
 /**
@@ -335,6 +324,7 @@ function ajaxGet(url, successCallback, errorCallback){
  * @param navMenuList
  */
 function navMenuController(navMenuList) {
+    console.log("Reached navMenuController");
     setNavMenu(navMenuList);
     renderNavMenu();
 }
