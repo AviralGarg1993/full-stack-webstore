@@ -380,6 +380,10 @@ function checkQuantitySync(array) {
         } else {
             quantitySyncStatus = 0;
             alert("Sorry :( :( The quantity of " + products[e].product.name + " in cart is  " + array[e] + " but availability is  " + serverProducts[e].product.quantity);
+            array[e] = serverProducts[e].product.quantity;
+            console.log("Updated cart: The quantity of " + products[e].product.name + " in cart is  " + array[e] + " and availability is  " + serverProducts[e].product.quantity);
+            renderCartCost();
+            showCart();
         }
     }
 }
