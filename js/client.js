@@ -493,7 +493,7 @@ function showCart() {
 
     var modalRemoveButtons = document.getElementsByClassName("rmBtn");
     console.log(modalRemoveButtons);
-    for (var i = 0; i < modalRemoveButtons.length; i++) {
+    for (i = 0; i < modalRemoveButtons.length; i++) {
         modalRemoveButtons[i].onclick = function () {
             removeFromCart(this.id);
             showCart();
