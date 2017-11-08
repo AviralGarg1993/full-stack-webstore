@@ -341,20 +341,22 @@ TASKS DONE:
 
 
     function clientSync(array){
-        
-        /* Check if prices in sync */
+    
         for (var e in array){
             if(serverProducts[e].product.price === products[e].product.price){
+                console.log(serverProducts[e].product.price);
                 priceSyncStatus = 1;
-                console.log("The price of " + products[e].product.name + " changed from " + products[e].product.price + " to " + serverProducts[e].product.price);
+                console.log("The price of " + products[e].product.name + " IS SAME " + products[e].product.price + " to " + serverProducts[e].product.price);
             } else {
                 priceSyncStatus = 0;
                 confirm("The price of " + products[e].product.name + " changed from $" + products[e].product.price + " to $" + serverProducts[e].product.price + ". Proceed?");
-                cart[e].product.price = serverProducts[e].product.price;
+                products[e].product.price = serverProducts[e].product.price;
+                console.log("The quantity is " + array[e]);
+                products[e].product.computeNetPrice(array[e]);
+                renderCartCost();
             }
         }
 
-        /* Check if quantity in sync */
         for (var e in array){
             if(array[e] <= serverProducts[e].product.quantity){
                 quantitySyncStatus = 1;
@@ -375,6 +377,7 @@ TASKS DONE:
     }
 
 
+
     function initServerProducts(list){
         for(var e in list){
              addServerList(list[e].name, list[e].quantity, list[e].price);
@@ -384,16 +387,10 @@ TASKS DONE:
 
     function checkoutSuccess(productList){
         var serverList = JSON.parse(productList);
-        // We first do JSON Parse  :: complete
         initServerProducts(serverList);
         console.log("init done");
-        console.log(serverProducts);
-        
-        // Sync the prices in cart
+        console.log(products);
         clientSync(cart);
-        
-        // Update the products
-        //products = serverList;
 
         if (priceSyncStatus && quantitySyncStatus){
             confirm("Price and availability confirmed. Do you want to proceed?");
@@ -403,10 +400,8 @@ TASKS DONE:
 
     var modalCheckOut = document.getElementsByClassName('modalCheckOut')[0];
     modalCheckOut.onclick = function() {
-        modal.style.display = "none";
-
-       // send AJAX request , and sync with the client side, if error try again until a few times
-       ajaxGet(url + '/products', checkoutSuccess, productListServerError);
+    modal.style.display = "none";
+    ajaxGet(url + '/products', checkoutSuccess, productListServerError);
     
     };
 
