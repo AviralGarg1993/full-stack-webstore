@@ -94,7 +94,7 @@ var ajaxGet = function (url, successCallback, errorCallback) {
         var msg = XHR_TIMEOUT + 'ms timout';
         errorCallback(xhr, url, msg);
     };
-    xhr.timeout = XHR_TIMEOUT;	 // Wait at most 5000 ms for a response
+    xhr.timeout = XHR_TIMEOUT; // Wait at most 5000 ms for a response
     console.log("Sending request: " + xhr);
     xhr.send(null);
 };
@@ -280,6 +280,12 @@ function removeFromCart(productName) {
     updateCartCost();
 }
 
+/**
+ *
+ * @param name
+ * @param quantity
+ * @param cost
+ */
 function addServerList(name, quantity, cost) {
     var imageURL = url + '/images/' + name + '.png';
     serverProducts[name] = {
@@ -288,6 +294,10 @@ function addServerList(name, quantity, cost) {
 }
 
 
+/**
+ *
+ * @param array
+ */
 function checkPriceSync(array) {
     for (var e in array) {
         if (serverProducts[e].product.price === products[e].product.price) {
@@ -306,25 +316,29 @@ function checkPriceSync(array) {
     }
 }
 
+/**
+ *
+ * @param array
+ */
 function checkQuantitySync(array) {
     for (var e in array) {
         if (array[e] <= serverProducts[e].product.quantity) {
             quantitySyncStatus = 1;
             console.log(" :) :) The quantity of " + products[e].product.name + " in cart is  " + array[e] + " and in server is  " + serverProducts[e].product.quantity);
-        }
-
-        else if (serverProducts[e].product.quantity === 0) {
+        } else if (serverProducts[e].product.quantity === 0) {
             removeFromCart(serverProducts[e].product.name);
             console.log("We removed " + serverProducts[e].product.name + " from cart");
-        }
-
-        else {
+        } else {
             quantitySyncStatus = 0;
             alert("Sorry :( :( The quantity of " + products[e].product.name + " in cart is  " + array[e] + " but availability is  " + serverProducts[e].product.quantity);
         }
     }
 }
 
+/**
+ *
+ * @param array
+ */
 function clientSync(array) {
 
     checkPriceSync(array);
@@ -334,6 +348,10 @@ function clientSync(array) {
 }
 
 
+/**
+ *
+ * @param list
+ */
 function initServerProducts(list) {
     for (var e in list) {
         addServerList(list[e].name, list[e].quantity, list[e].price);
@@ -341,6 +359,10 @@ function initServerProducts(list) {
 }
 
 
+/**
+ *
+ * @param productList
+ */
 function checkoutSuccess(productList) {
     var serverList = JSON.parse(productList);
     initServerProducts(serverList);
@@ -618,16 +640,32 @@ function renderProductList() {
 
     for (var productName in products) {
         var product = products[productName].product;
-        var pDiv = createNewElement('div', {'class': 'col-3 col-m-3 productDiv', 'id': product.name});
-        var pImage = createNewElement('img', {'class': 'productImg', 'src': product.imageUrl});
-        var pName = createNewElement('div', {'class': 'col-12 col-m-12 productNameDiv', 'innerHTML': product.name});
-        var overlayDiv2 = createNewElement('div', {'class': 'overlay2'});
+        var pDiv = createNewElement('div', {
+            'class': 'col-3 col-m-3 productDiv',
+            'id': product.name
+        });
+        var pImage = createNewElement('img', {
+            'class': 'productImg',
+            'src': product.imageUrl
+        });
+        var pName = createNewElement('div', {
+            'class': 'col-12 col-m-12 productNameDiv',
+            'innerHTML': product.name
+        });
+        var overlayDiv2 = createNewElement('div', {
+            'class': 'overlay2'
+        });
         var pCost = createNewElement('div', {
             'class': 'col-12 col-m-12 productCostDiv',
             'innerHTML': '$' + product.price
         });
-        var overlayDiv = createNewElement('div', {'class': 'overlay'});
-        var cartImg = createNewElement('img', {'class': 'cartImg', 'src': 'images/cart.png'});
+        var overlayDiv = createNewElement('div', {
+            'class': 'overlay'
+        });
+        var cartImg = createNewElement('img', {
+            'class': 'cartImg',
+            'src': 'images/cart.png'
+        });
         var addButton = createNewElement('button', {
             'class': 'col-5 col-m-5 addToCartButton',
             'innerHTML': 'Add',
