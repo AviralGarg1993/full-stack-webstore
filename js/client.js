@@ -174,7 +174,7 @@ function setNavMenu(navMenuList) {
  * @param productList
  */
 function initializeProductList(productList) {
-    console.log(productList);
+    // console.log(productList);
     productInfo = JSON.parse(productList);
 
     for(var name in productInfo)
@@ -316,17 +316,8 @@ function showCart() {
 
 /*
  ***********************************************************************************************************************************
-   TASK 4: Adding the AJAX request and synchronization to the modal checkout button
-   TODO: Move to M/V/C
 
-TASKS DONE:
-    * Sends AJAX Request on click        :)
-    * Confirms with user if in sync      :)
-    * Informs user if price changes      :)
-    * Informs user if quantity less      :) 
-
-    * Update cart with new info          :) :S :S  ======================>  NOT SURE WHAT TO DO // bUT I THINK IT'S DONE. TASK 5 LEFT
-  *************************************************************************************************************************************
+ ***********************************************************************************************************************************
  */   
     var serverProducts = [];
     var priceSyncStatus = 0;
@@ -412,19 +403,6 @@ TASKS DONE:
 // ********************************************************************************************************************************
    
 
-
-
-
-
-
-
-
-
-
-
-
-
-// *********************************************************************************************************************************
 
 
     //TODO: take the following two functions out of this function
