@@ -18,12 +18,12 @@ var quantitySyncStatus = 0;
 
 /**
  *
- * @param name
- * @param price
- * @param imageUrl
- * @param quantity
- * @constructor
+ * @param name: name of product
+ * @param price: price of product
+ * @param imageUrl: url to retrieve image
+ * @param quantity: initial quantity
  */
+
 var Product = function (name, price, imageUrl, quantity) {
     this.name = name;
     this.price = price;
@@ -33,8 +33,8 @@ var Product = function (name, price, imageUrl, quantity) {
 
 /**
  *
- * @param quantity
- * @returns {number}
+ * @param quantity: quantity of an object in cart
+ * @returns the total price
  */
 Product.prototype.computeNetPrice = function (quantity) {
     return this.price * quantity;
@@ -43,7 +43,7 @@ Product.prototype.computeNetPrice = function (quantity) {
 
 /**
  *
- * @param errMsg
+ * @param errMsg: the response from the xmlHttp request
  */
 function navMenuServerError(errMsg) {
     console.warn('Error while fetching navigation menu list from the server. \nError Message: ' + errMsg);
@@ -51,9 +51,9 @@ function navMenuServerError(errMsg) {
 
 /**
  *
- * @param req
- * @param url
- * @param msg
+ * @param req: request variable
+ * @param url: the url of the request
+ * @param msg: the response of the request
  */
 function productListServerError(req, url, msg) {
     if ((req.readyState === 4) && ++productsXhrReqCount <= XHR_COUNT_LIMIT) {
@@ -72,9 +72,9 @@ function productListServerError(req, url, msg) {
 
 
 /**
- * @param url
- * @param successCallback
- * @param errorCallback
+ * @param url: url to make request to
+ * @param successCallback: function to call on successful request
+ * @param errorCallback:   function to call when request fails
  */
 
 var ajaxGet = function (url, successCallback, errorCallback) {
@@ -100,7 +100,7 @@ var ajaxGet = function (url, successCallback, errorCallback) {
 };
 
 /**
- * initialize function
+ * initialize function: initialise the products
  */
 function init() {
 
@@ -140,6 +140,14 @@ window.onload = startTimer;
  * This allows the ease of changing model/view without affecting the other
  */
 
+
+
+
+
+
+
+
+
 /*
  * MODEL
  */
@@ -162,10 +170,13 @@ function startTimer() {
     }
 }
 
+
+
+
 /**
- * @param name
- * @param quantity
- * @param cost
+ * @param name: name of product
+ * @param quantity: quantitiy of product
+ * @param cost: price of product
  */
 function addProduct(name, quantity, cost) {
     var imageURL = url + '/images/' + name + '.png';
@@ -177,7 +188,7 @@ function addProduct(name, quantity, cost) {
 
 /**
  *
- * @param navMenuList
+ * @param navMenuList: the list of items in the navigation menu
  * @returns {*}
  */
 function setNavMenu(navMenuList) {
@@ -185,9 +196,11 @@ function setNavMenu(navMenuList) {
     return navMenu;
 }
 
+
+
 /**
  * @return {Array}
- * @param productList
+ * @param productList: list of prodducts
  */
 function initializeProductList(productList) {
     // console.log(productList);
@@ -200,13 +213,17 @@ function initializeProductList(productList) {
     return products;
 }
 
+
+
 /**
- * @param pName
+ * @param pName: name of product
  * @return {boolean}
  */
 function productInCart(pName) {
     return !(cart[pName] === undefined);
 }
+
+
 
 
 /**
@@ -259,7 +276,7 @@ function addToCart(productName) {
 }
 
 /**
- * @param productName
+ * @param productName: name of product
  */
 function removeFromCart(productName) {
     resetTimer();
@@ -282,9 +299,9 @@ function removeFromCart(productName) {
 
 /**
  *
- * @param name
- * @param quantity
- * @param cost
+ * @param name: name of product
+ * @param quantity: quantity of product
+ * @param cost: cost of product
  */
 function addServerList(name, quantity, cost) {
     var imageURL = url + '/images/' + name + '.png';
