@@ -1,4 +1,3 @@
-
 var productInfo;
 
 var navMenu;
@@ -18,7 +17,7 @@ var productsXhrReqCount = 0;
  * @param imageUrl
  * @constructor
  */
-var Product = function (name, price, imageUrl, quantity){
+var Product = function (name, price, imageUrl, quantity) {
     this.name = name;
     this.price = price;
     this.imageUrl = imageUrl;
@@ -30,30 +29,29 @@ var Product = function (name, price, imageUrl, quantity){
  * @param quantity
  * @returns {number}
  */
-Product.prototype.computeNetPrice = function(quantity) {
-    return this.price*quantity;
+Product.prototype.computeNetPrice = function (quantity) {
+    return this.price * quantity;
 };
 
 
 function navMenuServerError(errMsg) {
     console.warn('Error while fetching navigation menu list from the server. \nError Message: ' + errMsg);
 }
+
 function productListServerError(req, url, msg) {
-    if((req.readyState === 4)&& ++productsXhrReqCount <= XHR_COUNT_LIMIT){
+    if ((req.readyState === 4) && ++productsXhrReqCount <= XHR_COUNT_LIMIT) {
         console.log(msg + '\nRequesting Again! # of repeats: ' + productsXhrReqCount);
         req.open('Get', url);
         req.send();
-    } else if(productsXhrReqCount > XHR_COUNT_LIMIT){
+    } else if (productsXhrReqCount > XHR_COUNT_LIMIT) {
         console.log('Request #: ' + productsXhrReqCount + 'Exceded max req limit. To increase limit, change XHR_COUNT_LIMIT');
         productsXhrReqCount = 0;
     }
 
 
-
 }
 
 /*===============================================================================*/
-
 
 
 /**
@@ -62,7 +60,7 @@ function productListServerError(req, url, msg) {
  * @param errorCallback
  */
 
-var ajaxGet = function(url, successCallback, errorCallback) {
+var ajaxGet = function (url, successCallback, errorCallback) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url);
     xhr.onload = function () {
@@ -84,13 +82,14 @@ var ajaxGet = function(url, successCallback, errorCallback) {
     xhr.send(null);
 };
 var tmp1, tmp2;
+
 function init() {
 
     var isMyServer = false; // false for assignments
     const DEV_MSG = 'IMPORTANT: Please run the command "npm install" and then "heroku local web" in the source directory';
     const CPEN_URL = 'https://cpen400a-bookstore.herokuapp.com';
 
-    if(!isMyServer) {
+    if (!isMyServer) {
         url = CPEN_URL;
     }
 
@@ -110,7 +109,6 @@ function init() {
 init();
 
 /*===============================================================================*/
-
 
 
 //TODO: move to controller
@@ -134,7 +132,7 @@ function resetTimer() {
 
 function startTimer() {
     if (inactiveTime >= 30) {
-      //  alert("Hey there! Are you still planning to buy something?");
+        //  alert("Hey there! Are you still planning to buy something?");
         resetTimer();
         startTimer();
     } else {
@@ -177,7 +175,7 @@ function initializeProductList(productList) {
     // console.log(productList);
     productInfo = JSON.parse(productList);
 
-    for(var name in productInfo)
+    for (var name in productInfo)
         addProduct(productInfo[name].name, productInfo[name].quantity, productInfo[name].price);
 
     return products;
@@ -192,34 +190,23 @@ function productInCart(pName) {
 }
 
 
+/**
+ *
+ */
 function updateCartCost() {
     var keys = Object.keys(cart);
-    totalCost=0;
+    totalCost = 0;
     for (var i = 0; i < keys.length; i++) {
         var pName = keys[i];
         var pQuantity = cart[pName];
         var pPrice = products[pName].product.price;
 
         console.log('name: ' + pName + 'pQuant: ' + pQuantity + 'pPrice: ' + pPrice);
-        totalCost += pPrice*pQuantity;
+        totalCost += pPrice * pQuantity;
     }
 
     renderCartCost();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*
@@ -235,9 +222,9 @@ function addToCart(productName) {
     showRemoveButton(productName);
     if (products[productName].product.quantity <= 0) {
         // out of stock
-        alert( productName + ' Out of Stock!');
-    	hideAddButton(productName);
-    	showOutOfStockButton(productName);
+        alert(productName + ' Out of Stock!');
+        hideAddButton(productName);
+        showOutOfStockButton(productName);
 
     } else {
         if (!productInCart(productName)) {
@@ -249,7 +236,7 @@ function addToCart(productName) {
     }
     updateCartCost();
 
- 
+
 }
 
 /**
@@ -270,55 +257,57 @@ function removeFromCart(productName) {
             delete cart[productName];
         }
     }
-    
+
     updateCartCost();
 }
 
+/**
+ *
+ */
 function showCart() {
     updateCartCost();
     resetTimer();
-    var modalContent = '<table style="width:100%">'+
-    '<tr>\n' +
+    var modalContent = '<table style="width:100%">' +
+        '<tr>\n' +
         '<th>Product</th>\n' +
         '<th>Quantity</th> \n' +
         '<th>Unit Price</th>\n' +
         '<th>Amount</th>\n' +
-    '</tr>';
+        '</tr>';
     var cartLength = Object.keys(cart).length;
 
     if (cartLength > 0) {
-        var totalAmount=0;
+        var totalAmount = 0;
         for (var product in cart) {
             var quantity = cart[product];
             var unitPrice = products[product].product.price;
-            var amount = unitPrice*cart[product];
-            totalAmount +=amount;
-            modalContent += '<tr> <td>' +product + '</td>' + '<td><span id =' + product + ' class="rmBtn">-</span>' + quantity + '<span id =' + product + ' class="addBtn">+</span></td>' + '<td>$' + unitPrice + '</td>' +'<td>$' + amount + '</td>' + '</tr>';
+            var amount = unitPrice * cart[product];
+            totalAmount += amount;
+            modalContent += '<tr> <td>' + product + '</td>' + '<td><span id =' + product + ' class="rmBtn">-</span>' + quantity + '<span id =' + product + ' class="addBtn">+</span></td>' + '<td>$' + unitPrice + '</td>' + '<td>$' + amount + '</td>' + '</tr>';
         }
 
         modalContent += '<br>';
-        modalContent += '<tr> <td>' +'</td>' + '<td>' + '</td>' + '<td>' + '<em>Total Amount: </em></td>' +'<td>$' + totalAmount + '</td>' + '</tr>';
+        modalContent += '<tr> <td>' + '</td>' + '<td>' + '</td>' + '<td>' + '<em>Total Amount: </em></td>' + '<td>$' + totalAmount + '</td>' + '</tr>';
         modalContent += '</table> <button class="modalCheckOut">Checkout</button>';
 
     } else {
         modalContent = "Nothing in cart!";
     }
     var modalText = document.getElementById('modalText');
-    modalText.innerHTML =modalContent;
+    modalText.innerHTML = modalContent;
     var modal = document.getElementById('cartModal');
     modal.style.display = "block";
     var span = document.getElementsByClassName("close")[0];
-    span.onclick = function() {
+    span.onclick = function () {
         modal.style.display = "none";
     };
 
 
+    /*
+     ***********************************************************************************************************************************
 
-/*
- ***********************************************************************************************************************************
-
- ***********************************************************************************************************************************
- */   
+     ***********************************************************************************************************************************
+     */
     var serverProducts = [];
     var priceSyncStatus = 0;
     var quantitySyncStatus = 0;
@@ -332,10 +321,9 @@ function showCart() {
     }
 
 
-    function clientSync(array){
-    
-        for (var e in array){
-            if(serverProducts[e].product.price === products[e].product.price){
+    function chechPriceSync() {
+        for (var e in array) {
+            if (serverProducts[e].product.price === products[e].product.price) {
                 console.log(serverProducts[e].product.price);
                 priceSyncStatus = 1;
                 console.log("The price of " + products[e].product.name + " IS SAME " + products[e].product.price + " to " + serverProducts[e].product.price);
@@ -349,14 +337,16 @@ function showCart() {
                 showCart();
             }
         }
+    }
 
-        for (var e in array){
-            if(array[e] <= serverProducts[e].product.quantity){
+    function checkQuantitySync() {
+        for (var e in array) {
+            if (array[e] <= serverProducts[e].product.quantity) {
                 quantitySyncStatus = 1;
                 console.log(" :) :) The quantity of " + products[e].product.name + " in cart is  " + array[e] + " and in server is  " + serverProducts[e].product.quantity);
-            } 
+            }
 
-            else if (serverProducts[e].product.quantity === 0){
+            else if (serverProducts[e].product.quantity === 0) {
                 removeFromCart[serverProducts[e].product.name];
                 console.log("We removed " + serverProducts[e].product.name + " from cart");
             }
@@ -366,50 +356,54 @@ function showCart() {
                 alert("Sorry :( :( The quantity of " + products[e].product.name + " in cart is  " + array[e] + " but availability is  " + serverProducts[e].product.quantity);
             }
         }
+    }
+
+    function clientSync(array) {
+
+        chechPriceSync(array);
+        checkQuantitySync(array);
+
 
     }
 
 
-
-    function initServerProducts(list){
-        for(var e in list){
-             addServerList(list[e].name, list[e].quantity, list[e].price);
+    function initServerProducts(list) {
+        for (var e in list) {
+            addServerList(list[e].name, list[e].quantity, list[e].price);
         }
     }
 
 
-    function checkoutSuccess(productList){
+    function checkoutSuccess(productList) {
         var serverList = JSON.parse(productList);
         initServerProducts(serverList);
         console.log("init done");
         console.log(products);
         clientSync(cart);
-        if (priceSyncStatus && quantitySyncStatus){
-        	productsXhrReqCount = 0;
+        if (priceSyncStatus && quantitySyncStatus) {
+            productsXhrReqCount = 0;
             confirm("Price and availability confirmed. Do you want to proceed?");
-        } 
+        }
 
     }
 
     var modalCheckOut = document.getElementsByClassName('modalCheckOut')[0];
-    modalCheckOut.onclick = function() {
-    modal.style.display = "none";
-    ajaxGet(url + '/products', checkoutSuccess, productListServerError);
-    
+    modalCheckOut.onclick = function () {
+        modal.style.display = "none";
+        ajaxGet(url + '/products', checkoutSuccess, productListServerError);
+
     };
 
 // ********************************************************************************************************************************
 
 // ********************************************************************************************************************************
-   
-
 
 
     //TODO: take the following two functions out of this function
 
     var modalAddButtons = document.getElementsByClassName("addBtn");
     console.log(modalAddButtons);
-    for(var i=0; i<modalAddButtons.length;i++) {
+    for (var i = 0; i < modalAddButtons.length; i++) {
         modalAddButtons[i].onclick = function () {
             addToCart(this.id);
             showCart();
@@ -419,7 +413,7 @@ function showCart() {
 
     var modalRemoveButtons = document.getElementsByClassName("rmBtn");
     console.log(modalRemoveButtons);
-    for(var i=0; i<modalRemoveButtons.length;i++) {
+    for (var i = 0; i < modalRemoveButtons.length; i++) {
         modalRemoveButtons[i].onclick = function () {
             removeFromCart(this.id);
             showCart();
@@ -427,7 +421,7 @@ function showCart() {
     }
 
 
-    document.onkeydown = function(evt) {
+    document.onkeydown = function (evt) {
         evt = evt || window.event;
         if (evt.keyCode === 27) {
 
@@ -435,7 +429,7 @@ function showCart() {
         }
     };
 
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         if (event.target === modal) {
             modal.style.display = "none";
         }
@@ -459,7 +453,6 @@ function productListController(productList) {
     initializeProductList(productList);
     renderProductList();
 }
-
 
 
 /**
@@ -486,65 +479,78 @@ function attachRemoveButtonListener(removeButton) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
  * VIEW
  */
 
 
+/**
+ *
+ * @param productName
+ */
 function hideRemoveButton(productName) {
     console.log('here');
-    document.getElementById(productName+'rBtn').style.visibility = "hidden";
+    document.getElementById(productName + 'rBtn').style.visibility = "hidden";
 }
 
+/**
+ *
+ * @param productName
+ */
 function hideAddButton(productName) {
     console.log('reached hideAddButton');
-    document.getElementById(productName+'aBtn').style.visibility = "hidden";
+    document.getElementById(productName + 'aBtn').style.visibility = "hidden";
 }
 
+/**
+ *
+ * @param productName
+ */
 function showAddButton(productName) {
     console.log('reached hideAddButton');
-    document.getElementById(productName+'aBtn').style.visibility = "visible";
+    document.getElementById(productName + 'aBtn').style.visibility = "visible";
 }
 
 
-
+/**
+ *
+ * @param productName
+ */
 function showRemoveButton(productName) {
     console.log('here');
-    document.getElementById(productName+'rBtn').style.visibility = "visible";
+    document.getElementById(productName + 'rBtn').style.visibility = "visible";
 }
 
 
+/**
+ *
+ * @param productName
+ */
 function showOutOfStockButton(productName) {
     console.log(productName + 'out of stock');
-    document.getElementById(productName+'oBtn').style.visibility = "visible";
+    document.getElementById(productName + 'oBtn').style.visibility = "visible";
 }
 
 
+/**
+ *
+ * @param productName
+ */
 function hideOutOfStockButton(productName) {
     console.log('here');
-    document.getElementById(productName+'oBtn').style.visibility = "hidden";
+    document.getElementById(productName + 'oBtn').style.visibility = "hidden";
 }
 
+/**
+ *
+ */
 function renderCartCost() {
     document.getElementById('showCartButton').textContent = 'Cart ($' + totalCost + ')';
 }
 
+/**
+ *
+ */
 function renderNavMenu() {
     navMenu.forEach(function (menuItem) {
         var menu = document.getElementById('navigationMenu');
@@ -568,11 +574,20 @@ function createNewElement(tagName, attrArray) {
 
     for (var i = 0; i < keys.length; i++) {
         switch (keys[i]) {
-            case 'class':newNode.className = attrArray[keys[i]];break;
-            case 'id':newNode.id = attrArray[   keys[i]];break;
-            case 'src':newNode.src = attrArray[keys[i]];break;
-            case 'innerHTML':newNode.innerHTML = attrArray[keys[i]];break;
-            default:console.log('weird: ' + keys[i]);
+            case 'class':
+                newNode.className = attrArray[keys[i]];
+                break;
+            case 'id':
+                newNode.id = attrArray[keys[i]];
+                break;
+            case 'src':
+                newNode.src = attrArray[keys[i]];
+                break;
+            case 'innerHTML':
+                newNode.innerHTML = attrArray[keys[i]];
+                break;
+            default:
+                console.log('weird: ' + keys[i]);
         }
     }
 
@@ -599,16 +614,31 @@ function renderProductList() {
 
     for (var productName in products) {
         var product = products[productName].product;
-        var pDiv             = createNewElement('div', {'class': 'col-3 col-m-3 productDiv', 'id': product.name});
-        var pImage           = createNewElement('img', {'class': 'productImg','src': product.imageUrl});
-        var pName            = createNewElement('div', {'class': 'col-12 col-m-12 productNameDiv', 'innerHTML': product.name});
-        var overlayDiv2      = createNewElement('div', {'class': 'overlay2'});
-        var pCost       	 = createNewElement('div', {'class': 'col-12 col-m-12 productCostDiv','innerHTML': '$' + product.price});
-        var overlayDiv       = createNewElement('div', {'class': 'overlay'});
-        var cartImg          = createNewElement('img', {'class': 'cartImg', 'src': 'images/cart.png'});
-        var addButton        = createNewElement('button', {'class': 'col-5 col-m-5 addToCartButton', 'innerHTML': 'Add', 'id': product.name+'aBtn'});
-        var outOfStockButton = createNewElement('button', {'class': 'col-5 col-m-5 outOfStockButton', 'innerHTML': 'Sorry, out of stock!', 'id': productName+'oBtn'});
-        var removeButton     = createNewElement('button', {'class': 'col-5 col-m-5 removeFromCartButton','innerHTML': 'Remove', 'id':product.name+'rBtn'});
+        var pDiv = createNewElement('div', {'class': 'col-3 col-m-3 productDiv', 'id': product.name});
+        var pImage = createNewElement('img', {'class': 'productImg', 'src': product.imageUrl});
+        var pName = createNewElement('div', {'class': 'col-12 col-m-12 productNameDiv', 'innerHTML': product.name});
+        var overlayDiv2 = createNewElement('div', {'class': 'overlay2'});
+        var pCost = createNewElement('div', {
+            'class': 'col-12 col-m-12 productCostDiv',
+            'innerHTML': '$' + product.price
+        });
+        var overlayDiv = createNewElement('div', {'class': 'overlay'});
+        var cartImg = createNewElement('img', {'class': 'cartImg', 'src': 'images/cart.png'});
+        var addButton = createNewElement('button', {
+            'class': 'col-5 col-m-5 addToCartButton',
+            'innerHTML': 'Add',
+            'id': product.name + 'aBtn'
+        });
+        var outOfStockButton = createNewElement('button', {
+            'class': 'col-5 col-m-5 outOfStockButton',
+            'innerHTML': 'Sorry, out of stock!',
+            'id': productName + 'oBtn'
+        });
+        var removeButton = createNewElement('button', {
+            'class': 'col-5 col-m-5 removeFromCartButton',
+            'innerHTML': 'Remove',
+            'id': product.name + 'rBtn'
+        });
 
         attachAddButtonListener(addButton);
         attachRemoveButtonListener(removeButton);
