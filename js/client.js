@@ -10,11 +10,18 @@ const XHR_COUNT_LIMIT = 5;
 const XHR_TIMEOUT = 5000; // in ms
 var productsXhrReqCount = 0;
 
+
+var serverProducts = [];
+var priceSyncStatus = 0;
+var quantitySyncStatus = 0;
+
+
 /**
  *
  * @param name
  * @param price
  * @param imageUrl
+ * @param quantity
  * @constructor
  */
 var Product = function (name, price, imageUrl, quantity) {
@@ -34,10 +41,20 @@ Product.prototype.computeNetPrice = function (quantity) {
 };
 
 
+/**
+ *
+ * @param errMsg
+ */
 function navMenuServerError(errMsg) {
     console.warn('Error while fetching navigation menu list from the server. \nError Message: ' + errMsg);
 }
 
+/**
+ *
+ * @param req
+ * @param url
+ * @param msg
+ */
 function productListServerError(req, url, msg) {
     if ((req.readyState === 4) && ++productsXhrReqCount <= XHR_COUNT_LIMIT) {
         console.log(msg + '\nRequesting Again! # of repeats: ' + productsXhrReqCount);
@@ -81,8 +98,10 @@ var ajaxGet = function (url, successCallback, errorCallback) {
     console.log("Sending request: " + xhr);
     xhr.send(null);
 };
-var tmp1, tmp2;
 
+/**
+ * initialize function
+ */
 function init() {
 
     var isMyServer = false; // false for assignments
@@ -98,9 +117,8 @@ function init() {
 
 
     // GET requests to my server
-    tmp1 = new ajaxGet('/navMenuList', navMenuController, navMenuServerError);
+    ajaxGet('/navMenuList', navMenuController, navMenuServerError);
 
-    console.log(tmp1);
     // GET requests to cpen server
     ajaxGet(url + '/products', productListController, productListServerError);
 
@@ -175,8 +193,9 @@ function initializeProductList(productList) {
     // console.log(productList);
     productInfo = JSON.parse(productList);
 
-    for (var name in productInfo)
+    for (var name in productInfo) {
         addProduct(productInfo[name].name, productInfo[name].quantity, productInfo[name].price);
+    }
 
     return products;
 }
@@ -261,6 +280,80 @@ function removeFromCart(productName) {
     updateCartCost();
 }
 
+function addServerList(name, quantity, cost) {
+    var imageURL = url + '/images/' + name + '.png';
+    serverProducts[name] = {
+        product: new Product(name, cost, imageURL, quantity)
+    }
+}
+
+
+function checkPriceSync(array) {
+    for (var e in array) {
+        if (serverProducts[e].product.price === products[e].product.price) {
+            console.log(serverProducts[e].product.price);
+            priceSyncStatus = 1;
+            console.log("The price of " + products[e].product.name + " IS SAME " + products[e].product.price + " to " + serverProducts[e].product.price);
+        } else {
+            priceSyncStatus = 0;
+            confirm("The price of " + products[e].product.name + " changed from $" + products[e].product.price + " to $" + serverProducts[e].product.price + ". Proceed?");
+            products[e].product.price = serverProducts[e].product.price;
+            console.log("The quantity is " + array[e]);
+            products[e].product.computeNetPrice(array[e]);
+            renderCartCost();
+            showCart();
+        }
+    }
+}
+
+function checkQuantitySync(array) {
+    for (var e in array) {
+        if (array[e] <= serverProducts[e].product.quantity) {
+            quantitySyncStatus = 1;
+            console.log(" :) :) The quantity of " + products[e].product.name + " in cart is  " + array[e] + " and in server is  " + serverProducts[e].product.quantity);
+        }
+
+        else if (serverProducts[e].product.quantity === 0) {
+            removeFromCart(serverProducts[e].product.name);
+            console.log("We removed " + serverProducts[e].product.name + " from cart");
+        }
+
+        else {
+            quantitySyncStatus = 0;
+            alert("Sorry :( :( The quantity of " + products[e].product.name + " in cart is  " + array[e] + " but availability is  " + serverProducts[e].product.quantity);
+        }
+    }
+}
+
+function clientSync(array) {
+
+    checkPriceSync(array);
+    checkQuantitySync(array);
+
+
+}
+
+
+function initServerProducts(list) {
+    for (var e in list) {
+        addServerList(list[e].name, list[e].quantity, list[e].price);
+    }
+}
+
+
+function checkoutSuccess(productList) {
+    var serverList = JSON.parse(productList);
+    initServerProducts(serverList);
+    console.log("init done");
+    console.log(products);
+    clientSync(cart);
+    if (priceSyncStatus && quantitySyncStatus) {
+        productsXhrReqCount = 0;
+        confirm("Price and availability confirmed. Do you want to proceed?");
+    }
+
+}
+
 /**
  *
  */
@@ -302,101 +395,12 @@ function showCart() {
         modal.style.display = "none";
     };
 
-
-    /*
-     ***********************************************************************************************************************************
-
-     ***********************************************************************************************************************************
-     */
-    var serverProducts = [];
-    var priceSyncStatus = 0;
-    var quantitySyncStatus = 0;
-    const XHR_COUNT_LIMIT = 5;
-
-    function addServerList(name, quantity, cost) {
-        var imageURL = url + '/images/' + name + '.png';
-        serverProducts[name] = {
-            product: new Product(name, cost, imageURL, quantity)
-        }
-    }
-
-
-    function chechPriceSync() {
-        for (var e in array) {
-            if (serverProducts[e].product.price === products[e].product.price) {
-                console.log(serverProducts[e].product.price);
-                priceSyncStatus = 1;
-                console.log("The price of " + products[e].product.name + " IS SAME " + products[e].product.price + " to " + serverProducts[e].product.price);
-            } else {
-                priceSyncStatus = 0;
-                confirm("The price of " + products[e].product.name + " changed from $" + products[e].product.price + " to $" + serverProducts[e].product.price + ". Proceed?");
-                products[e].product.price = serverProducts[e].product.price;
-                console.log("The quantity is " + array[e]);
-                products[e].product.computeNetPrice(array[e]);
-                renderCartCost();
-                showCart();
-            }
-        }
-    }
-
-    function checkQuantitySync() {
-        for (var e in array) {
-            if (array[e] <= serverProducts[e].product.quantity) {
-                quantitySyncStatus = 1;
-                console.log(" :) :) The quantity of " + products[e].product.name + " in cart is  " + array[e] + " and in server is  " + serverProducts[e].product.quantity);
-            }
-
-            else if (serverProducts[e].product.quantity === 0) {
-                removeFromCart[serverProducts[e].product.name];
-                console.log("We removed " + serverProducts[e].product.name + " from cart");
-            }
-
-            else {
-                quantitySyncStatus = 0;
-                alert("Sorry :( :( The quantity of " + products[e].product.name + " in cart is  " + array[e] + " but availability is  " + serverProducts[e].product.quantity);
-            }
-        }
-    }
-
-    function clientSync(array) {
-
-        chechPriceSync(array);
-        checkQuantitySync(array);
-
-
-    }
-
-
-    function initServerProducts(list) {
-        for (var e in list) {
-            addServerList(list[e].name, list[e].quantity, list[e].price);
-        }
-    }
-
-
-    function checkoutSuccess(productList) {
-        var serverList = JSON.parse(productList);
-        initServerProducts(serverList);
-        console.log("init done");
-        console.log(products);
-        clientSync(cart);
-        if (priceSyncStatus && quantitySyncStatus) {
-            productsXhrReqCount = 0;
-            confirm("Price and availability confirmed. Do you want to proceed?");
-        }
-
-    }
-
     var modalCheckOut = document.getElementsByClassName('modalCheckOut')[0];
     modalCheckOut.onclick = function () {
         modal.style.display = "none";
         ajaxGet(url + '/products', checkoutSuccess, productListServerError);
 
     };
-
-// ********************************************************************************************************************************
-
-// ********************************************************************************************************************************
 
 
     //TODO: take the following two functions out of this function
