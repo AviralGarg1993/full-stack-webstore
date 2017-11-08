@@ -331,6 +331,7 @@ TASKS DONE:
     var serverProducts = [];
     var priceSyncStatus = 0;
     var quantitySyncStatus = 0;
+    const XHR_COUNT_LIMIT = 5;
 
     function addServerList(name, quantity, cost) {
         var imageURL = url + '/images/' + name + '.png';
@@ -354,6 +355,7 @@ TASKS DONE:
                 console.log("The quantity is " + array[e]);
                 products[e].product.computeNetPrice(array[e]);
                 renderCartCost();
+                showCart();
             }
         }
 
@@ -391,8 +393,8 @@ TASKS DONE:
         console.log("init done");
         console.log(products);
         clientSync(cart);
-
         if (priceSyncStatus && quantitySyncStatus){
+        	productsXhrReqCount = 0;
             confirm("Price and availability confirmed. Do you want to proceed?");
         } 
 
