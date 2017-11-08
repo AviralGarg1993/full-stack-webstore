@@ -17,6 +17,7 @@ var quantitySyncStatus = 0;
 
 
 /**
+ * Description: Constructor for product object
  *
  * @param name: name of product
  * @param price: price of product
@@ -31,10 +32,12 @@ var Product = function (name, price, imageUrl, quantity) {
     this.quantity = quantity;
 };
 
+
 /**
+ * Description: Computes the total price given the quantity of the product 
  *
  * @param quantity: quantity of an object in cart
- * @returns the total price
+ * @returns price
  */
 Product.prototype.computeNetPrice = function (quantity) {
     return this.price * quantity;
@@ -42,6 +45,7 @@ Product.prototype.computeNetPrice = function (quantity) {
 
 
 /**
+ * Description: Logs the error message (of the request to load the navigation menu) on the console 
  *
  * @param errMsg: the response from the xmlHttp request
  */
@@ -50,6 +54,7 @@ function navMenuServerError(errMsg) {
 }
 
 /**
+ * Description: Logs the error message (of the request to load the products list) on the console
  *
  * @param req: request variable
  * @param url: the url of the request
@@ -72,6 +77,8 @@ function productListServerError(req, url, msg) {
 
 
 /**
+ * Description: Makes the AJAX request as per the Assignment specifications
+ *
  * @param url: url to make request to
  * @param successCallback: function to call on successful request
  * @param errorCallback:   function to call when request fails
@@ -100,6 +107,8 @@ var ajaxGet = function (url, successCallback, errorCallback) {
 };
 
 /**
+ * Description: Function where we initialise the products
+ *
  * initialize function: initialise the products
  */
 function init() {
@@ -152,13 +161,17 @@ window.onload = startTimer;
  * MODEL
  */
 
+
+/* Resets the inactivity period for the webpage */
 function resetTimer() {
     inactiveTime = 0;
 }
 
+
+/* Timer to alert the user after a period of inactivity */
 function startTimer() {
     if (inactiveTime >= 30) {
-        //  alert("Hey there! Are you still planning to buy something?");
+           alert("Hey there! Are you still planning to buy something?");
         resetTimer();
         startTimer();
     } else {
@@ -174,6 +187,8 @@ function startTimer() {
 
 
 /**
+ * Description: Adds a product to the products variable
+ *
  * @param name: name of product
  * @param quantity: quantitiy of product
  * @param cost: price of product
@@ -187,6 +202,7 @@ function addProduct(name, quantity, cost) {
 
 
 /**
+ * Description: Parses a JSON string
  *
  * @param navMenuList: the list of items in the navigation menu
  * @returns {*}
@@ -199,6 +215,8 @@ function setNavMenu(navMenuList) {
 
 
 /**
+ * Description: Initalises the products list by adding products to it
+ *
  * @return {Array}
  * @param productList: list of prodducts
  */
@@ -216,6 +234,8 @@ function initializeProductList(productList) {
 
 
 /**
+ * Description: Determines whether a product is in the cart or not
+ *
  * @param pName: name of product
  * @return {boolean}
  */
@@ -227,8 +247,9 @@ function productInCart(pName) {
 
 
 /**
- *
+ * Description: Updates the cost of a cart
  */
+
 function updateCartCost() {
     var keys = Object.keys(cart);
     totalCost = 0;
@@ -251,6 +272,8 @@ function updateCartCost() {
 
 
 /**
+ * Description: adds the product to cart
+ *
  * @param productName
  */
 function addToCart(productName) {
@@ -276,6 +299,8 @@ function addToCart(productName) {
 }
 
 /**
+ * Description: Removes the product from cart
+ *
  * @param productName: name of product
  */
 function removeFromCart(productName) {
@@ -297,7 +322,10 @@ function removeFromCart(productName) {
     updateCartCost();
 }
 
+
+
 /**
+ * Description: Adds products to a new list. This is the updated list when we click checkout
  *
  * @param name: name of product
  * @param quantity: quantity of product
@@ -311,8 +339,10 @@ function addServerList(name, quantity, cost) {
 }
 
 
+
 /**
- *
+ * Description: Checks whether the price of products in cart is in sync with the server
+ * 
  * @param array
  */
 function checkPriceSync(array) {
@@ -333,7 +363,10 @@ function checkPriceSync(array) {
     }
 }
 
+
+
 /**
+ * Description: Checks whether there is enough of a product in stock to satisfy the cart amount
  *
  * @param array
  */
@@ -352,7 +385,9 @@ function checkQuantitySync(array) {
     }
 }
 
+
 /**
+ * Description: Checks synchronisation of price and quantity
  *
  * @param array
  */
@@ -366,6 +401,7 @@ function clientSync(array) {
 
 
 /**
+ * Description: initialises the updated list from the server
  *
  * @param list
  */
@@ -377,6 +413,7 @@ function initServerProducts(list) {
 
 
 /**
+ * Description: Runs some tasks when the second AJAX request (the one we make on checkout) is successful
  *
  * @param productList
  */
@@ -393,8 +430,9 @@ function checkoutSuccess(productList) {
 
 }
 
+
 /**
- *
+ * Descriptionn: Shows the cart
  */
 function showCart() {
     updateCartCost();
@@ -481,6 +519,8 @@ function showCart() {
 
 
 /**
+ * Description: sets the navigation menu with response from the server
+ *
  * @param navMenuList
  */
 function navMenuController(navMenuList) {
@@ -489,6 +529,8 @@ function navMenuController(navMenuList) {
 }
 
 /**
+ * Description: sets the productlist with response from the server
+ *
  * @param productList
  */
 function productListController(productList) {
@@ -499,6 +541,8 @@ function productListController(productList) {
 
 
 /**
+ * Description: attaches listener to add to cart button
+ *
  * @param addButton
  */
 function attachAddButtonListener(addButton) {
@@ -511,6 +555,8 @@ function attachAddButtonListener(addButton) {
 
 
 /**
+ * Description: attaches listener to remove from cart button
+ *
  * @param removeButton
  */
 function attachRemoveButtonListener(removeButton) {
