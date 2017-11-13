@@ -1,0 +1,15 @@
+Task 1A		2
+Task 1B		2
+Task 2		1
+Task 3		2.5
+Task 4		2
+Task 5		4
+Code Quality		3
+Scalability		2.5
+Bonus		
+Total		19
+
+Comments:
+Clicking on remove does not update the cart value.
+Embedding inline HTML string in JS functions is usually considered bad practice.
+Fetching navMenuList from server makes the client-side app heavily coupled with the server-side.
