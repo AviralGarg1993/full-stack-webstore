@@ -1,11 +1,13 @@
 // server.js
-// where eSports League node app starts
 
 // init project
 var express = require('express');
 var app = express();
 const fs = require('fs');
+var mongodb = require('mongodb'); /* <Added for Assignment 5> */
+
 var productArray = [];
+
 // set port
 // env stands for environment
 // heroku sets the port or port would be 8080
@@ -66,3 +68,6 @@ var navMenuList = [
 app.listen(port, function () {
     console.log("app listening on port: " + port);
 });
+
+
+

@@ -16,9 +16,7 @@
  */ 
 
 
-/* Based on Tutorial at https://docs.mongodb.com/getting-started/node/insert/ */
-
-
+/* Load the products to the database */
 
 db.products.insertMany([
 		{"name":"KeyboardCombo","price":33,"quantity":9,"imageUrl":"https://cpen400a-bookstore.herokuapp.com/images/KeyboardCombo.png"},
@@ -34,3 +32,11 @@ db.products.insertMany([
 	    {"name":"Jeans","price":37,"quantity":4,"imageUrl":"https://cpen400a-bookstore.herokuapp.com/images/Jeans.png"},
 	    {"name":"Keyboard","price":23,"quantity":9,"imageUrl":"https://cpen400a-bookstore.herokuapp.com/images/Keyboard.png"}
 	]);
+
+
+/* Load the users */
+
+
+
+
+/* Load the orders */

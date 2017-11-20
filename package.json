@@ -5,9 +5,9 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "4.16.1"
+    "express": "4.16.1",
+    "mongodb": "^2.2.33"
   },
   "author": "Aviral Garg and Atif Mahmud",
   "license": "MIT"
-  
 }
