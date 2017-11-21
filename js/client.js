@@ -432,6 +432,8 @@ function checkoutSuccess(productList) {
         confirm("Price and availability confirmed. Do you want to proceed?");
     }
 
+    /* Call this function for sending the data to the server side, which will then use POST to put inside database */
+    sendToServer(cart);
 }
 
 
@@ -569,6 +571,20 @@ function attachRemoveButtonListener(removeButton) {
         var productName = this.parentElement.parentElement.id;
         removeFromCart(productName);
     };
+}
+
+/* Function called that sends the cart to the backend for Assignment-5 Task 4 <Atif, 20th Nov> */
+
+function sendToServer(cart) {
+    console.log("20/11/2017, 2040hrs");
+    console.log(cart);
+    var xhr = new XMLHttpRequest();
+    console.log("Reched the sendToServer method, 20/11/2017, 1951hrs");
+    data = JSON.stringify(cart);
+    xhr.open('POST', url + 'checkout', true);
+    xhr.setRequestHeader('content-type', 'application/json');
+    xhr.send(data);
+    console.log("After stringify, " + data);
 }
 
 

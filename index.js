@@ -3,6 +3,8 @@ var url = "mongodb://localhost:27017/db";
 var assert = require('assert');
 var MongoClient = require("mongodb").MongoClient;
 var app = express();
+app.use(express.json());	// <- alias to bodyParser.json
+app.use(express.urlencoded());	// <- alias to bodyParser.urlencoded
 
 //var appHost = 'https://cpen400a-bookstore.herokuapp.com/'; //hard-coded host url (should really be defined in a separate config)
 
@@ -42,7 +44,7 @@ app.get('/products', function (request, response) {
         cursor.each(function (err, doc) {
             assert.equal(err, null);
             if (doc !== null) {
-                console.log(doc);
+               // console.log(doc);
                 products.push(doc);
             }
         });
@@ -123,3 +125,31 @@ var navMenuList = [
 app.listen(app.get('port'), function () {
     console.log("Node app is running at localhost:" + app.get('port'))
 });
+
+
+
+/**
+ ************************************************************************************************************************************************
+ * TASK 4: 
+ *         +1: Handler for POST /checkout endpoint
+ *         +1: When POST /checkout is made, insert order into db
+ *		   +1: Clicking Checkout makes the POST request
+ ************************************************************************************************************************************************
+ */
+
+
+
+/* Handler for POST /checkout endpoint, accepts a JSON formatted object */
+ app.post('/checkout', function(request, response){
+ // var cart = JSON.parse(request);
+ 	console.log("Reached app.post (using request.body), " + request.body);
+ 	console.log("Reached app.post (using request.data), " + request.data);
+//	alert(request);
+//  console.log("Reached app.post (using JSON.parse(request.body), " + JSON.parse(request.body));
+//  console.log("Reached app.post (using cart (JSON.parse)), " + cart);
+ 	MongoClient.connect(url, function(err, db){
+ 		assert.equal(err, null);
+
+ 	});
+ });
+ 
