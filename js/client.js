@@ -9,7 +9,7 @@ var url = '';
 const XHR_COUNT_LIMIT = 5;
 const XHR_TIMEOUT = 5000; // in ms
 var productsXhrReqCount = 0;
-
+var token;
 
 var serverProducts = [];
 var priceSyncStatus = 0;
@@ -247,8 +247,6 @@ function startTimer() {
 }
 
 
-
-
 /**
  * Adds a product to the products variable
  *
@@ -443,7 +441,6 @@ function checkQuantitySync(array) {
             console.log("We removed " + serverProducts[e].product.name + " from cart");
         } else {
             quantitySyncStatus = 0;
-         // alert("Sorry :( :( The quantity of " + products[e].product.name + " in cart is  " + array[e] + " but availability is  " + serverProducts[e].product.quantity);
             array[e] = serverProducts[e].product.quantity;
             console.log("Updated cart: The quantity of " + products[e].product.name + " in cart is  " + array[e] + " and availability is  " + serverProducts[e].product.quantity);
             renderCartCost();

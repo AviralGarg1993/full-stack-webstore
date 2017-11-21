@@ -157,6 +157,7 @@ app.listen(app.get('port'), function () {
 app.post('/checkout', function (request, response) {
     MongoClient.connect(url, function (err, db) {
         assert.equal(err, null);
+        var token = request.get("token");
         // insert cart and total into orders collection
         db.collection('orders').insertOne({cart: request.body.cart, total: parseFloat(request.body.total)});
         for (var pName in request.body.cart) {
