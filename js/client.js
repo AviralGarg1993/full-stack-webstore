@@ -73,9 +73,6 @@ function productListServerError(req, url, msg) {
 
 }
 
-/*===============================================================================*/
-
-
 /**
  * Makes the AJAX request as per the Assignment specifications
  *
@@ -108,6 +105,72 @@ var ajaxGet = function (url, successCallback, errorCallback) {
 };
 
 /**
+ * hides products filtered by priceFilter
+ * @param res
+ */
+function hideFilteredProducts(res) {
+    var filteredProducts = JSON.parse(res);
+    var allProductDivs = document.getElementsByClassName('productDiv');
+    console.log(allProductDivs);
+    var counter = 0;
+    for (i in allProductDivs) {
+        allProductDivs[i].className += ' hidden';
+
+        if (counter >= allProductDivs.length)
+            break;
+    }
+
+    for (var i in filteredProducts) {
+        var filteredProductName = filteredProducts[i].name;
+        document.getElementById(filteredProductName).classList.remove("hidden");
+    }
+}
+
+/**
+ * success callback for ajax request to get price-filtered product
+ * @param response
+ */
+function filtersChanged(response) {
+    console.log('filtersChangedSuccessfully');
+    console.log(response);
+    hideFilteredProducts(response);
+}
+
+/**
+ * erroneous callback from ajax request to price-filtered products
+ * @param request
+ * @param url
+ * @param responseMessage
+ */
+function errChangingFilters(request, url, responseMessage) {
+    console.log('Error changing filter. Request: ' + request);
+    console.log('Error changing filter. URL: ' + url);
+    console.log('Error changing filter. Message: ' + responseMessage);
+}
+
+/**
+ *  Event listener to change in price filters
+ */
+function handlePriceFilterChange() {
+    var minPrice = document.getElementById('minPrice').value;
+    var maxPrice = document.getElementById('maxPrice').value;
+
+    console.log('Price Filters changed to: ' + minPrice + ' - ' + maxPrice);
+
+    ajaxGet('/products?minPrice=' + minPrice + '&maxPrice=' + maxPrice, filtersChanged, errChangingFilters);
+}
+
+/**
+ * Initialize event listeners
+ */
+function initEventListeners() {
+    document.getElementById('showCartButton').onclick = showCart;
+    window.onload = startTimer;
+    document.getElementById('minPrice').onchange = handlePriceFilterChange;
+    document.getElementById('maxPrice').onchange = handlePriceFilterChange;
+}
+
+/**
  * Function where we initialise the products
  *
  * initialize function: initialise the products
@@ -130,14 +193,14 @@ function init() {
     ajaxGet('/navMenuList', navMenuController, navMenuServerError);
 
     // GET requests to cpen server
-    ajaxGet(url + '/products', productListController, productListServerError);
+    ajaxGet('/products', productListController, productListServerError);
+
+    initEventListeners();
 
 }
 
 init();
 
-document.getElementById('showCartButton').onclick = showCart;
-window.onload = startTimer;
 
 /*
  * MVC design pattern
@@ -540,6 +603,7 @@ function navMenuController(navMenuList) {
  * @param productList
  */
 function productListController(productList) {
+    console.log(productList);
     productsXhrReqCount = 0;
     initializeProductList(productList);
     renderProductList();

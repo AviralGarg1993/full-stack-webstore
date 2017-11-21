@@ -3,6 +3,10 @@
     zoom: 1;
 }
 
+.hidden {
+    display: none;
+}
+
 body {
     /* max-width instead of width: to improve the browser's handling of small windows */
     max-width: 1000px;
@@ -40,12 +44,10 @@ header > img {
 }
 
 #mainContent {
-//	border: dotted black;
 	position: relative;
 }
 /* Navigation Menu */
 #navMenuDiv{
-//	border: solid red;
 	float: left;
 }
 
@@ -73,7 +75,6 @@ header > img {
 #imageGallery {
 	margin-left: 20.82%;
 	overflow: hidden;
-//	border: solid green;
 	padding-bottom: 50px;
 }
 
@@ -83,7 +84,6 @@ header > img {
 
 .productDiv {
 	position: relative;
-//	border: solid green;
 	margin: 20px 30px;
 	float:left;
 }
@@ -99,22 +99,19 @@ header > img {
 
 .overlay {
 	position: absolute;
-//	border: solid blue;
     transition: 1s ease;
 	opacity: 0;
-    top: 0%;
-    left: 0%;
+    top: 0;
+    left: 0;
 }
 
 .overlay2 {
 	position: absolute;
     transition: 1s ease;
-//	border: green solid;
 	background-color: black;
 	border-radius: 15px;
 	opacity: 0;
-	position: absolute;
-	top: -12px;
+    top: -12px;
 	left: -12px;
 	width: 223px;
 	height: 235px;
@@ -193,7 +190,6 @@ header > img {
 .productNameDiv {
 	color: black;
 	position: absolute;
-	//top: 0%;
 }
 
 .btn {
@@ -203,8 +199,8 @@ header > img {
     background-image: -ms-linear-gradient(top, #3498db, #2980b9);
     background-image: -o-linear-gradient(top, #3498db, #2980b9);
     background-image: linear-gradient(to bottom, #3498db, #2980b9);
-    -webkit-border-radius: 31;
-    -moz-border-radius: 31;
+    -webkit-border-radius: 31px;
+    -moz-border-radius: 31px;
     border-radius: 31px;
     text-shadow: 2px 1px 3px #666666;
     font-family: Arial, serif;
@@ -309,6 +305,7 @@ header > img {
     text-decoration: none;
     cursor: pointer;
 }
+
 /* For mobile phones: */
 [class*="col-"] {
     width: 100%;
@@ -344,3 +341,4 @@ header > img {
     .col-11 {width: 91.66%;}
     .col-12 {width: 100%;}
 }
+
