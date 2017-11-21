@@ -34,9 +34,8 @@ db.products.insertMany([
 	]);
 
 
-/* Load the users */
 
-
+/* This serves as an example of how the orders document would look, and also initialises the the orders collection */
 db.orders.insertMany([
     {"cart": {KeyboardCombo: 1, PC1: 1}, "total": 369},
     {"cart": {KeyboardCombo: 1, PC1: 3}, "total": 1041}
@@ -44,9 +43,8 @@ db.orders.insertMany([
 
 
 
-/* Load the orders */
 
-
+/* This serves as an example of how the users document would look, and also initialises the the users collection */
 db.users.insertMany([
     {"token": "Xoe2inasd"},
     {"token": "Xoe2insdf"}
