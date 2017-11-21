@@ -8,7 +8,7 @@ Throughout the project we have restricted the use of external libraries, but for
 
 Task 1: Example documents for the orders and users are included in js/initdb.js
 
-Task 4: The POST request for the orders is sent when user clicks checkout and clicks OK on the alert.  
+Task 4: The POST request for the orders is sent when user clicks checkout (we have removed the alerts) 
 
 
 
