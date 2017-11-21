@@ -3,6 +3,8 @@ var url = "mongodb://localhost:27017/db";
 var assert = require('assert');
 var MongoClient = require("mongodb").MongoClient;
 var app = express();
+app.use(express.json());	// <- alias to bodyParser.json
+app.use(express.urlencoded());	// <- alias to bodyParser.urlencoded
 
 //var appHost = 'https://cpen400a-bookstore.herokuapp.com/'; //hard-coded host url (should really be defined in a separate config)
 
@@ -138,4 +140,28 @@ var navMenuList = [
 
 app.listen(app.get('port'), function () {
     console.log("Node app is running at localhost:" + app.get('port'))
+});
+
+
+/**
+ ************************************************************************************************************************************************
+ * TASK 4:
+ *         +1: Handler for POST /checkout endpoint
+ *         +1: When POST /checkout is made, insert order into db
+ *           +1: Clicking Checkout makes the POST request
+ ************************************************************************************************************************************************
+ */
+
+
+/* Handler for POST /checkout endpoint, accepts a JSON formatted object */
+app.post('/checkout', function (request, response) {
+    MongoClient.connect(url, function (err, db) {
+        assert.equal(err, null);
+        // insert cart and total into orders collection
+        db.collection('orders').insertOne({cart: request.body.cart, total: parseFloat(request.body.total)});
+        for (var pName in request.body.cart) {
+            // update the quantities of the products added to the orders
+            db.collection('products').updateOne({"name": pName}, {$inc: {"quantity": -request.body.cart[pName]}});
+        }
+    });
 });

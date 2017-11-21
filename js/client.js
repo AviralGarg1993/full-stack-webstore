@@ -495,6 +495,8 @@ function checkoutSuccess(productList) {
         confirm("Price and availability confirmed. Do you want to proceed?");
     }
 
+    /* Call this function for sending the data to the server side, which will then use POST to put inside database */
+    sendToServer(cart);
 }
 
 
@@ -633,6 +635,31 @@ function attachRemoveButtonListener(removeButton) {
         var productName = this.parentElement.parentElement.id;
         removeFromCart(productName);
     };
+}
+
+
+/**
+ * Sends cart to the backend to be added to 'orders' collection
+ * @param cart
+ */
+function sendToServer(cart) {
+    console.log("20/11/2017, 2040hrs");
+    //cart = '{' +  + '}';
+    var newObj = {};
+    var cartObj = {};
+    for (var i in cart)
+        cartObj[i] = cart[i];
+    newObj.cart = cartObj;
+    newObj.total = totalCost;
+
+    var xhr = new XMLHttpRequest();
+    console.log("Reched the sendToServer method, 20/11/2017, 1951hrs");
+    var data = JSON.stringify(newObj);
+    xhr.open('POST', url + 'checkout', true);
+    xhr.setRequestHeader('content-type', 'application/json');
+    xhr.send(data);
+    console.log("After stringify, data: ");
+    console.log(data);
 }
 
 
