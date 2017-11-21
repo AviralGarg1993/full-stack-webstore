@@ -148,7 +148,7 @@ app.listen(app.get('port'), function () {
  * TASK 4:
  *         +1: Handler for POST /checkout endpoint
  *         +1: When POST /checkout is made, insert order into db
- *           +1: Clicking Checkout makes the POST request
+ *         +1: Clicking Checkout makes the POST request
  ************************************************************************************************************************************************
  */
 
@@ -161,7 +161,8 @@ app.post('/checkout', function (request, response) {
         db.collection('orders').insertOne({cart: request.body.cart, total: parseFloat(request.body.total)});
         for (var pName in request.body.cart) {
             // update the quantities of the products added to the orders
-            db.collection('products').updateOne({"name": pName}, {$inc: {"quantity": -request.body.cart[pName]}});
+            db.collection('products').updateOne({"name": pName}, {$inc: {"quantity": -request.body.cart[pName]}});	
         }
+        response.send("Done"); /* Send response, else request keeps being resent */
     });
 });
