@@ -19,6 +19,17 @@ function getRandomInt(min, max) {
 /* Products object removed, because we need to retrieve from MongoDB, as per Piazza post @301 and @243 */
 var products = [];
 
+app.use(express.static(__dirname));
+
+app.get('/', function (request, response) {
+    response.sendFile(__dirname + '/index.html');
+});
+
+app.get("/navMenuList", function (request, response) {
+    response.send(navMenuList);
+});
+
+
 /* This is what we use to get products */
 app.get('/products', function (request, response) {
 
@@ -38,6 +49,8 @@ app.get('/products', function (request, response) {
 
         db.close();
     });
+
+    response.send(products);
 
     /*************** TA's code for random number stuff************
      var option = getRandomInt(0, 5);
@@ -93,6 +106,19 @@ app.get('/products/:productKey', function (request, response) {
     response.status(500).send("An error occurred, please try again");
   }*/
 });
+
+
+// Simple nav list menu items
+var navMenuList = [
+    'All Items',
+    'Books',
+    'Clothing',
+    'Tech',
+    'Gifts',
+    'Stationary',
+    'Supplies'
+];
+
 
 app.listen(app.get('port'), function () {
     console.log("Node app is running at localhost:" + app.get('port'))

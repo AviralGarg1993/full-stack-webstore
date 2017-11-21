@@ -102,7 +102,8 @@ var ajaxGet = function (url, successCallback, errorCallback) {
         errorCallback(xhr, url, msg);
     };
     xhr.timeout = XHR_TIMEOUT; // Wait at most 5000 ms for a response
-    console.log("Sending request: " + xhr);
+    console.log("Sending request: ");
+    console.log(xhr);
     xhr.send(null);
 };
 

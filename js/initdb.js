@@ -37,6 +37,17 @@ db.products.insertMany([
 /* Load the users */
 
 
+db.orders.insertMany([
+    {"cart": "[KeyboardCombo: 1, PC1: 1]", "total": 369},
+    {"cart": "[KeyboardCombo: 1, PC1: 3]", "total": 1041}
+]);
+
 
 
 /* Load the orders */
+
+
+db.users.insertMany([
+    {"token": "Xoe2inasd"},
+    {"token": "Xoe2insdf"}
+]);
