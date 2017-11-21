@@ -416,7 +416,7 @@ function checkPriceSync(array) {
             console.log("The price of " + products[e].product.name + " IS SAME " + products[e].product.price + " to " + serverProducts[e].product.price);
         } else {
             priceSyncStatus = 0;
-            confirm("The price of " + products[e].product.name + " changed from $" + products[e].product.price + " to $" + serverProducts[e].product.price + ". Proceed?");
+         // confirm("The price of " + products[e].product.name + " changed from $" + products[e].product.price + " to $" + serverProducts[e].product.price + ". Proceed?");
             products[e].product.price = serverProducts[e].product.price;
             console.log("The quantity is " + array[e]);
             products[e].product.computeNetPrice(array[e]);
@@ -443,7 +443,7 @@ function checkQuantitySync(array) {
             console.log("We removed " + serverProducts[e].product.name + " from cart");
         } else {
             quantitySyncStatus = 0;
-            alert("Sorry :( :( The quantity of " + products[e].product.name + " in cart is  " + array[e] + " but availability is  " + serverProducts[e].product.quantity);
+         // alert("Sorry :( :( The quantity of " + products[e].product.name + " in cart is  " + array[e] + " but availability is  " + serverProducts[e].product.quantity);
             array[e] = serverProducts[e].product.quantity;
             console.log("Updated cart: The quantity of " + products[e].product.name + " in cart is  " + array[e] + " and availability is  " + serverProducts[e].product.quantity);
             renderCartCost();
@@ -492,7 +492,7 @@ function checkoutSuccess(productList) {
     clientSync(cart);
     if (priceSyncStatus && quantitySyncStatus) {
         productsXhrReqCount = 0;
-        confirm("Price and availability confirmed. Do you want to proceed?");
+    //  confirm("Price and availability confirmed. Do you want to proceed?");
     }
 
     /* Call this function for sending the data to the server side, which will then use POST to put inside database */
@@ -545,7 +545,7 @@ function showCart() {
     modalCheckOut.onclick = function () {
         modal.style.display = "none";
         ajaxGet(url + '/products', checkoutSuccess, productListServerError);
-
+        sendToServer(cart); 
     };
 
 
