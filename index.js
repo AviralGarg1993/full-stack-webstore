@@ -18,7 +18,6 @@ function getRandomInt(min, max) {
 
 /* Products object removed, because we need to retrieve from MongoDB, as per Piazza post @301 and @243 */
 var products = [];
-//var parsed;
 
 /* This is what we use to get products */
 app.get('/products', function (request, response) {

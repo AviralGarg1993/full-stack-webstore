@@ -113,7 +113,7 @@ var ajaxGet = function (url, successCallback, errorCallback) {
  */
 function init() {
 
-    var isMyServer = false; // false for assignments
+    var isMyServer = true; // false for assignments
     const DEV_MSG = 'IMPORTANT: Please run the command "npm install" and then "heroku local web" in the source directory';
     const CPEN_URL = 'https://cpen400a-bookstore.herokuapp.com';
 
