@@ -4,6 +4,16 @@ In this assignment we will focus on building the backend for the bookstore. You 
 You will need [NodeJS](https://nodejs.org) to complete this assignment, so please install NodeJS if you haven't done so yet.
 Throughout the project we have restricted the use of external libraries, but for this assignment, you will be using two [npm](https://www.npmjs.com) modules: `express` and `mongodb`.
 
+## Submission Notes
+
+Task 1: Example documents for the orders and users are included in js/initdb.js
+
+Task 4: The POST request for the orders is sent when user clicks checkout and clicks OK on the alert.  
+
+
+
+
+
 ## Dependencies
 
 * `express` (npm)
