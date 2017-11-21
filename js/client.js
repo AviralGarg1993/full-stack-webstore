@@ -171,7 +171,7 @@ function resetTimer() {
  */
 function startTimer() {
     if (inactiveTime >= 30) {
-           alert("Hey there! Are you still planning to buy something?");
+        //alert("Hey there! Are you still planning to buy something?");
         resetTimer();
         startTimer();
     } else {
@@ -577,14 +577,24 @@ function attachRemoveButtonListener(removeButton) {
 
 function sendToServer(cart) {
     console.log("20/11/2017, 2040hrs");
-    console.log(cart);
+    //cart = '{' +  + '}';
+    var newObj = {};
+
+    for (var i in cart) {
+        newObj[i] = cart[i];
+        /*console.log(i);
+        console.log(cart[i]);*/
+    }
+    console.log(newObj);
+
     var xhr = new XMLHttpRequest();
     console.log("Reched the sendToServer method, 20/11/2017, 1951hrs");
-    data = JSON.stringify(cart);
+    var data = JSON.stringify(newObj);
     xhr.open('POST', url + 'checkout', true);
     xhr.setRequestHeader('content-type', 'application/json');
     xhr.send(data);
-    console.log("After stringify, " + data);
+    console.log("After stringify, data: ");
+    console.log(data);
 }
 
 

@@ -12,7 +12,7 @@ app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 
 /***** TA's random number code
-function getRandomInt(min, max) {
+ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
  */
@@ -44,7 +44,7 @@ app.get('/products', function (request, response) {
         cursor.each(function (err, doc) {
             assert.equal(err, null);
             if (doc !== null) {
-               // console.log(doc);
+                // console.log(doc);
                 products.push(doc);
             }
         });
@@ -127,29 +127,29 @@ app.listen(app.get('port'), function () {
 });
 
 
-
 /**
  ************************************************************************************************************************************************
- * TASK 4: 
+ * TASK 4:
  *         +1: Handler for POST /checkout endpoint
  *         +1: When POST /checkout is made, insert order into db
- *		   +1: Clicking Checkout makes the POST request
+ *           +1: Clicking Checkout makes the POST request
  ************************************************************************************************************************************************
  */
 
 
-
 /* Handler for POST /checkout endpoint, accepts a JSON formatted object */
- app.post('/checkout', function(request, response){
- // var cart = JSON.parse(request);
- 	console.log("Reached app.post (using request.body), " + request.body);
- 	console.log("Reached app.post (using request.data), " + request.data);
-//	alert(request);
-//  console.log("Reached app.post (using JSON.parse(request.body), " + JSON.parse(request.body));
-//  console.log("Reached app.post (using cart (JSON.parse)), " + cart);
- 	MongoClient.connect(url, function(err, db){
- 		assert.equal(err, null);
-
- 	});
- });
+app.post('/checkout', function (request, response) {
+    var cart = request.body;
+    //console.log(cart);
+    MongoClient.connect(url, function (err, db) {
+        assert.equal(err, null);
+        var cartArr = [];
+        for (var i in cart) {
+            cartArr[i] = cart[i];
+            //db.orders.insertOne({cart: [i]})
+        }
+        console.log(cartArr);
+        db.orders.insertOne({cart: cartArr, total: 10});
+    });
+});
  
