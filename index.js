@@ -139,17 +139,14 @@ app.listen(app.get('port'), function () {
 
 /* Handler for POST /checkout endpoint, accepts a JSON formatted object */
 app.post('/checkout', function (request, response) {
-    var cart = request.body;
-    //console.log(cart);
     MongoClient.connect(url, function (err, db) {
         assert.equal(err, null);
-        var cartArr = [];
-        for (var i in cart) {
-            cartArr[i] = cart[i];
-            //db.orders.insertOne({cart: [i]})
+        // insert cart and total into orders collection
+        db.collection('orders').insertOne({cart: request.body.cart, total: parseFloat(request.body.total)});
+        for (var pName in request.body.cart) {
+            // update the quantities of the products added to the orders
+            db.collection('products').updateOne({"name": pName}, {$inc: {"quantity": -request.body.cart[pName]}});
         }
-        console.log(cartArr);
-        db.orders.insertOne({cart: cartArr, total: 10});
     });
 });
  

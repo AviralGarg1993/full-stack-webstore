@@ -573,19 +573,20 @@ function attachRemoveButtonListener(removeButton) {
     };
 }
 
-/* Function called that sends the cart to the backend for Assignment-5 Task 4 <Atif, 20th Nov> */
 
+/**
+ * Sends cart to the backend to be added to 'orders' collection
+ * @param cart
+ */
 function sendToServer(cart) {
     console.log("20/11/2017, 2040hrs");
     //cart = '{' +  + '}';
     var newObj = {};
-
-    for (var i in cart) {
-        newObj[i] = cart[i];
-        /*console.log(i);
-        console.log(cart[i]);*/
-    }
-    console.log(newObj);
+    var cartObj = {};
+    for (var i in cart)
+        cartObj[i] = cart[i];
+    newObj.cart = cartObj;
+    newObj.total = totalCost;
 
     var xhr = new XMLHttpRequest();
     console.log("Reched the sendToServer method, 20/11/2017, 1951hrs");

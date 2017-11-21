@@ -38,8 +38,8 @@ db.products.insertMany([
 
 
 db.orders.insertMany([
-    {"cart": "[KeyboardCombo: 1, PC1: 1]", "total": 369},
-    {"cart": "[KeyboardCombo: 1, PC1: 3]", "total": 1041}
+    {"cart": {KeyboardCombo: 1, PC1: 1}, "total": 369},
+    {"cart": {KeyboardCombo: 1, PC1: 3}, "total": 1041}
 ]);
 
 
