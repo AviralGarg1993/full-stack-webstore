@@ -5,22 +5,9 @@ var MongoClient = require("mongodb").MongoClient;
 var app = express();
 app.use(express.json());	// <- alias to bodyParser.json
 app.use(express.urlencoded());	// <- alias to bodyParser.urlencoded
-
-//var appHost = 'https://cpen400a-bookstore.herokuapp.com/'; //hard-coded host url (should really be defined in a separate config)
-
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
 app.use(express.json());
-/***** TA's random number code
- function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
- */
-
-
-/* Products object removed, because we need to retrieve from MongoDB, as per Piazza post @301 and @243 */
-//var products = [];
-
 app.use(express.static(__dirname));
 
 app.get('/', function (request, response) {
@@ -30,8 +17,6 @@ app.get('/', function (request, response) {
 app.get("/navMenuList", function (request, response) {
     response.send(navMenuList);
 });
-
-
 
 app.get('/products/:productKey', function (request, response) {
 
@@ -44,20 +29,6 @@ app.get('/products/:productKey', function (request, response) {
     } else {
         response.status(404).send("Product does not exist");
     }
-
-    /****************TA's random number code**********
-     var option = getRandomInt(0, 5);
-
-     if (option < 4) {
-	  if (request.params.productKey in products){
-		  response.json(products[request.params.productKey]);
-	  }
-	  else {
-		  response.status(404).send("Product does not exist");
-	  }
-  } else if (option === 4) {
-    response.status(500).send("An error occurred, please try again");
-  }*/
 });
 
 

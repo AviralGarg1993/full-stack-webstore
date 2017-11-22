@@ -1,5 +1,4 @@
 var productInfo;
-
 var navMenu;
 var products = [];
 var cart = [];
@@ -208,10 +207,6 @@ init();
  * model(app data) and the view (rendered content/ DOM)
  * This allows the ease of changing model/view without affecting the other
  */
-
-
-
-
 
 
 
