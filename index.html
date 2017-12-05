@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <META NAME="author" CONTENT="Aviral Garg and Atif Mahmud">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UBC Bookstore</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <!--<script src="http://ece.ubc.ca/~kbajaj/cpen400a/jquery.js" type="text/javascript"></script>
+    <script src="http://ece.ubc.ca/~kumseok/src/cpen400a/test4.js" type="text/javascript"></script>-->
+</head>
+<body>
+<header>
+    <img src="http://via.placeholder.com/200?text=bookstore">
+    <img src="http://via.placeholder.com/790x200?text=Welcome to my bookstore">
+</header>
+<main>
+    <div class="col-12 col-m-12 titleArea clearFix">
+		<div class="btn" id="showCartButton"> Cart ($0)</div>
+    </div>
+    <div class="row">
+		<div class="clearFix" id="mainContent">
+			<div class="clearFix col-2 col-m-2" id="navMenuDiv">
+	            <ul class="col-12 col-m-12" id="navigationMenu"></ul>
+                <div id="priceFilter">
+                    <label for="minPrice">Min:</label><input class="priceFilterInput col-2 col-m-2" id="minPrice">
+                    <label for="maxPrice">Max:</label><input class="priceFilterInput col-2 col-m-2" id="maxPrice">
+                </div>
+	        </div>
+	        <div class="col-9 col-m-9 clearFix" id="imageGallery">
+	            <div class="col-12 col-m-12" id="productList"></div>
+	        </div>
+		</div>
+    </div>
+</main>
+
+<footer>
+    Inactive for:
+    <span id="inactiveTimeDisplay"></span>
+    <p>Created by Aviral Garg and Atif Mahmud.</p>
+</footer>
+
+<!-- The Modal -->
+<div id="cartModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p id="modalText">Some text in the Modal..</p>
+    </div>
+
+</div>
+</body>
+<script type='text/javascript' src='js/client.js'></script>
+</html>
