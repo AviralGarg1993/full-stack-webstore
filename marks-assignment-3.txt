@@ -6,8 +6,8 @@ Task 4		2
 Task 5		4
 Code Quality		3
 Scalability		2.5
-Bonus		
-Total		19
+Bonus		1
+Total		20
 
 Comments:
 Clicking on remove does not update the cart value.
